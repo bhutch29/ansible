@@ -4,7 +4,7 @@
   vars:
      pool: tank
      mountsize: 8
-     template: iso:ubuntu-16.04-standard_16.04-1_amd64.tar.gz
+     template: iso:vztmpl/ubuntu-16.04-standard_16.04-1_amd64.tar.gz
      cores: 1
      memory: 512
      onboot: no
@@ -27,21 +27,22 @@
           node: pve
           api_user: root@pam
           api_password: Brzbat29
-          api_host: "{{containername | mandatory}}"
+          api_host: pve
           password: Brzbat29
           hostname: "{{containername | mandatory}}"
           ostemplate: "{{template}}"
-          netif: '{"net0":"name=eno1,gw=192.168.1.1,ip=192.168.1.{{id}}/24,bridge=vmbr0}'
+          netif: '{"net0":"name=eno1,gw=192.168.1.1,ip=192.168.1.{{id}}/24,bridge=vmbr0"}'
           mounts: '{"mp0":"{{containername | mandatory}}:{{mountsize}},mp=/mnt/appdata"}'
           cores: "{{cores}}"
           memory: "{{memory}}"
           state: present
           pubkey: "{{publickey}}"
           onboot: "{{onboot}}" 
+          storage: "{{containername}}"
      - name: start container
        proxmox:
           vmid: "{{id}}"
           api_user: root@pam
           api_password: Brzbat29
-          api_host: "{{containername | mandatory}}"
+          api_host: pve
           state: started
