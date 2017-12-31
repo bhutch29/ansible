@@ -1,12 +1,11 @@
--name: setup local machine
--hosts: 127.0.0.1
-connection: local
+- hosts: 127.0.0.1
+  connection: local
 
-vars:
-	pool: tank
+  vars:
+     pool: tank
 
-tasks:
-	-name: create zfs file system
-	zfs: 
-		name={{pool}}/appdata/test
-		state=present
+  tasks:
+     - name: create zfs file system
+       zfs:
+          name={{pool}}/appdata/{{containername | mandatory}}
+          state=present
