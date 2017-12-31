@@ -16,32 +16,32 @@
           name: "{{pool}}/appdata/{{containername | mandatory}}"
           state: present
      - name: get ZFS storage list from PVE
-       command: pvesm zfsscan
-       register: proxmox_zfs_storage
+       command: pvesm status
+       register: proxmox_zfs_status
      - name: add file system to PVE
-       shell: pvesm add zfs {{containername | mandatory}} -pool {{pool}}/appdata/{{containername | mandatory}}
-       when: proxmox_zfs_storage.stdout | search('{{pool}}/appdata/{{containername | mandatory}}')
+       shell: pvesm add zfspool {{containername | mandatory}} -pool {{pool}}/appdata/{{containername | mandatory}} -blocksize 8k
+       when: not proxmox_zfs_status.stdout | search(containername)
      - name: create Ubuntu 16.04 LXC container in Proxmox
        proxmox:
-          vmid: {{id | mandatory}}
+          vmid: "{{id | mandatory}}"
           node: pve
           api_user: root@pam
           api_password: Brzbat29
-          api_host: {{containername | mandatory}}
+          api_host: "{{containername | mandatory}}"
           password: Brzbat29
-          hostname: {{containername | mandatory}}
-          ostemplate: {{template}}
+          hostname: "{{containername | mandatory}}"
+          ostemplate: "{{template}}"
           netif: '{"net0":"name=eno1,gw=192.168.1.1,ip=192.168.1.{{id}}/24,bridge=vmbr0}'
           mounts: '{"mp0":"{{containername | mandatory}}:{{mountsize}},mp=/mnt/appdata"}'
-          cores: {{cores}}
-          memory: {{memory}}
+          cores: "{{cores}}"
+          memory: "{{memory}}"
           state: present
-          pubkey: {{publickey}}
-          onboot: {{onboot}} 
+          pubkey: "{{publickey}}"
+          onboot: "{{onboot}}" 
      - name: start container
        proxmox:
-          vmid: {{id}}
+          vmid: "{{id}}"
           api_user: root@pam
           api_password: Brzbat29
-          api_host: {{containername | mandatory}}
+          api_host: "{{containername | mandatory}}"
           state: started
