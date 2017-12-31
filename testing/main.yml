@@ -7,5 +7,8 @@
   tasks:
      - name: create zfs file system
        zfs:
-          name={{pool}}/appdata/{{containername | mandatory}}
-          state=present
+          name: "{{pool}}/appdata/{{containername | mandatory}}"
+          state: present
+#     - name: create LXC container in Proxmox
+#       proxmox:
+#          vmid:
