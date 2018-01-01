@@ -59,3 +59,7 @@
 [rpis]
 #nut.bsnetworks.com
 192.168.1.199
+
+[dns]
+#pihole.bsnetworks.com
+192.168.1.102
