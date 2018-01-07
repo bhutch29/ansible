@@ -63,3 +63,15 @@
 [dns]
 #pihole.bsnetworks.com
 192.168.1.102
+
+[ubuntu]
+#pihole.bsnetworks.com
+192.168.1.102
+#aptcacher.bsnetworks.com
+192.168.1.103
+#unifi.bsnetworks.com
+192.168.1.104
+#dockerhost.bsnetworks.com
+192.168.1.201
+#unifivideo.bsnetworks.com
+192.168.1.106

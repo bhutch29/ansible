@@ -1,0 +1,23 @@
+- name: Point to apt-cacher-ng on all devices (except itself)
+  hosts: all:!192.168.1.103
+  gather_facts: False
+
+  tasks:
+     - include_tasks: config_apt_cacher.yml
+
+- name: apt update and upgrade all Ubuntu devices
+  hosts: ubuntu
+
+  tasks:
+     - include_tasks: apt_update_and_upgrade.yml
+
+#- name: update and upgrade gitlab
+#  hosts: 192.168.1.101
+#  gather_facts: False
+#
+#  tasks:
+#    # sudo apt-get update
+#    # sudo apt-get install gitlab-ce
+
+
+# TODO: Add DietPi devices update/upgrade

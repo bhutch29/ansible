@@ -21,7 +21,7 @@
        command: pvesm status
        register: proxmox_zfs_status
      - name: add file system to PVE
-       shell: pvesm add zfspool {{containername | mandatory}} -pool {{pool}}/appdata/{{containername | mandatory}} -blocksize 8k
+       shell: pvesm add zfspool {{containername}} -pool {{pool}}/appdata/{{containername}} -blocksize 8k
        when: not proxmox_zfs_status.stdout | search(containername)
      - name: create Ubuntu 16.04 LXC container in Proxmox
        proxmox:
@@ -31,10 +31,10 @@
           api_password: Brzbat29
           api_host: pve
           password: Brzbat29
-          hostname: "{{containername | mandatory}}"
+          hostname: "{{containername}}"
           ostemplate: "{{template}}"
           netif: '{"net0":"name=eno1,gw=192.168.1.1,ip=192.168.1.{{id}}/24,bridge=vmbr0"}'
-          mounts: '{"mp0":"{{containername | mandatory}}:{{mountsize}},mp=/mnt/appdata"}'
+          mounts: '{"mp0":"{{containername}}:{{mountsize}},mp=/mnt/appdata"}'
           cores: "{{cores}}"
           memory: "{{memory}}"
           state: present
@@ -60,7 +60,10 @@
   tasks:
      - name: install python 2 (if needed)
        raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
-     - include_tasks: config_apt_cacher.yml
+     - name: point to apt-cacher-ng
+       copy:
+          dest: /etc/apt/apt.conf.d/02proxy
+          content: Acquire::http::Proxy "http://192.168.1.103:3142";
 
 - name: Add new container IP information to local dns
   hosts: dns
