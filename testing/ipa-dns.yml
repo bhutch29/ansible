@@ -1,0 +1,47 @@
+- name: Configure FreeIPA DNS records
+  hosts: ipa
+
+  vars:
+    dns_records:
+      - name: router
+        ip: 192.168.1.1
+      - name: proxmox1
+        ip: 192.168.1.97
+      - name: idrac.proxmox1
+        ip: 192.168.1.98
+      - name: pve
+        ip: 192.168.1.100
+      - name: gitlab
+        ip: 192.168.1.101
+      - name: pihole
+        ip: 192.168.1.102
+      - name: unifi
+        ip: 192.168.1.104
+      - name: unifivideo
+        ip: 192.168.1.106
+      - name: rack0pi
+        ip: 192.168.1.196
+      - name: idrac.pve
+        ip: 192.168.1.197
+      - name: garagedoor
+        ip: 192.168.1.198
+      - name: nut
+        ip: 192.168.1.199
+      - name: dockerhost
+        ip: 192.168.1.201
+      - name: nextcloud
+        ip: 192.168.1.201
+
+
+  tasks:
+    - name: Create IPA DNS records
+      ipa_dnsrecord:
+        ipa_host: ipa.in.bhutch.org
+        ipa_pass: Brzbat29
+        state: present
+        zone_name: in.bhutch.org
+        record_name: "{{ item.name }}"
+        record_value: "{{ item.ip }}"
+        record_type: "{{ item.type | default('A') }}"
+        record_ttl: 300
+      with_items: "{{ dns_records }}"

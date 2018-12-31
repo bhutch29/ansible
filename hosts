@@ -1,77 +1,51 @@
-# This is the default ansible 'hosts' file.
-#
-# It should live in /etc/ansible/hosts
-#
-#   - Comments begin with the '#' character
-#   - Blank lines are ignored
-#   - Groups of hosts are delimited by [header] elements
-#   - You can enter hostnames or ip addresses
-#   - A hostname/ip can be a member of multiple groups
-
-# Ex 1: Ungrouped hosts, specify before any group headers.
-
-## green.example.com
-## blue.example.com
-## 192.168.100.1
-## 192.168.100.10
-
-# Ex 2: A collection of hosts belonging to the 'webservers' group
-
-## [webservers]
-## alpha.example.org
-## beta.example.org
-## 192.168.1.100
-## 192.168.1.110
-
-# If you have multiple hosts following a pattern you can specify
-# them like this:
-
-## www[001:006].example.com
-
-# Ex 3: A collection of database servers in the 'dbservers' group
-
-## [dbservers]
-## 
-## db01.intranet.mydomain.net
-## db02.intranet.mydomain.net
-## 10.25.1.56
-## 10.25.1.57
-
-# Here's another example of host ranges, this time there are no
-# leading 0s:
-
-## db-[99:101]-node.example.com
+[ipa]
+#ipa.in.bhutch.org
+192.168.1.203 ansible_user=bhutch
 
 [vms]
-#gitlab.bsnetworks.com
+#gitlab.in.bhutch.org
 192.168.1.101
-#pihole.bsnetworks.com
+#pihole.in.bhutch.org
 192.168.1.102
-#aptcacher.bsnetworks.com
+#aptcacher.in.bhutch.org
 192.168.1.103
-#unifi.bsnetworks.com
+#unifi.in.bhutch.org
 192.168.1.104
-#dockerhost.bsnetworks.com
+#dockerhost.in.bhutch.org
 192.168.1.201
-#unifivideo.bsnetworks.com
+#unifivideo.in.bhutch.org
 192.168.1.106
+#ipa.in.bhutch.org
+192.168.1.203
+#gitlab-runner-1.in.bhutch.org
+192.168.1.121
 
 [rpis]
-#nut.bsnetworks.com
+#nut.in.bhutch.org
 192.168.1.199
+#garagedoor
+192.168.1.198
+#rack0Pi?
+192.168.1.196
 
 [dns]
-#pihole.bsnetworks.com
+#pihole.in.bhutch.org
 192.168.1.102
+#ipa.in.bhutch.org
+192.168.1.203
 
 [ubuntu]
-#pihole.bsnetworks.com
+#pihole.in.bhutch.org
 192.168.1.102
-#aptcacher.bsnetworks.com
+#aptcacher.in.bhutch.org
 192.168.1.103
-#unifi.bsnetworks.com
+#unifi.in.bhutch.org
 192.168.1.104
-#dockerhost.bsnetworks.com
+#dockerhost.in.bhutch.org
 192.168.1.201
-#unifivideo.bsnetworks.com
+#unifivideo.in.bhutch.org
 192.168.1.106
+#mqttclient
+192.168.1.110
+#workout
+192.168.1.111
