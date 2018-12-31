@@ -1,51 +1,30 @@
 [ipa]
-#ipa.in.bhutch.org
-192.168.1.203 ansible_user=bhutch
+192.168.1.203 ansible_user=bhutch #ipa.in.bhutch.org
 
 [vms]
-#gitlab.in.bhutch.org
-192.168.1.101
-#pihole.in.bhutch.org
-192.168.1.102
-#aptcacher.in.bhutch.org
-192.168.1.103
-#unifi.in.bhutch.org
-192.168.1.104
-#dockerhost.in.bhutch.org
-192.168.1.201
-#unifivideo.in.bhutch.org
-192.168.1.106
-#ipa.in.bhutch.org
-192.168.1.203
-#gitlab-runner-1.in.bhutch.org
-192.168.1.121
+192.168.1.101 #gitlab.in.bhutch.org
+192.168.1.102 #pihole.in.bhutch.org
+192.168.1.103 #aptcacher.in.bhutch.org
+192.168.1.104 #unifi.in.bhutch.org
+192.168.1.201 #dockerhost.in.bhutch.org
+192.168.1.106 #unifivideo.in.bhutch.org
+192.168.1.203 #ipa.in.bhutch.org
+192.168.1.121 #gitlab-runner-1.in.bhutch.org
 
 [rpis]
-#nut.in.bhutch.org
-192.168.1.199
-#garagedoor
-192.168.1.198
-#rack0Pi?
-192.168.1.196
+192.168.1.199 #nut.in.bhutch.org
+192.168.1.198 #garagedoor
+192.168.1.196 #rack0Pi?
 
 [dns]
-#pihole.in.bhutch.org
-192.168.1.102
-#ipa.in.bhutch.org
-192.168.1.203
+192.168.1.102 #pihole.in.bhutch.org
+192.168.1.203 #ipa.in.bhutch.org
 
 [ubuntu]
-#pihole.in.bhutch.org
-192.168.1.102
-#aptcacher.in.bhutch.org
-192.168.1.103
-#unifi.in.bhutch.org
-192.168.1.104
-#dockerhost.in.bhutch.org
-192.168.1.201
-#unifivideo.in.bhutch.org
-192.168.1.106
-#mqttclient
-192.168.1.110
-#workout
-192.168.1.111
+192.168.1.102 #pihole.in.bhutch.org
+192.168.1.103 #aptcacher.in.bhutch.org
+192.168.1.104 #unifi.in.bhutch.org
+192.168.1.201 #dockerhost.in.bhutch.org
+192.168.1.106 #unifivideo.in.bhutch.org
+192.168.1.110 #mqttclient
+192.168.1.111 #workout
