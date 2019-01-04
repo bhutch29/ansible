@@ -1,4 +1,4 @@
-- name: Configure FreeIPA DNS records
+- name: Create IPA hosts, services, dns records, and ssl certificates
   hosts: ipa-servers
 
   vars:
@@ -49,8 +49,35 @@
         creates: '{{ ssl_cert_path }}/{{ item }}.{{ domain }}.crt'
       with_items: "{{ groups['servers'] }}"
 
-    # - name: Copy SSL Certificates
-    #   # TODO: how to decide where to copy these to? Nginx reverse proxy? File on the host itself?
-    #   hosts: '{{ item.cert_target_host }}'
-    #   synchronize: 'src={{ ssl_cert_path }}/{{ item.name }}.{{ domain }}.crt dest={{ item.cert_target_folder }}'
-    #   delegate_to: ipa
+    - name: Fetch SSL Certificates
+      fetch:
+        src: "{{ ssl_cert_path }}/{{ item }}.{{ domain }}.crt"
+        dest: "/etc/ansible/temp/certs/"
+        flat: yes
+      with_items: "{{ groups['servers'] }}"
+
+    - name: Fetch SSL Keys
+      fetch:
+        src: "{{ ssl_key_path }}/{{ item }}.{{ domain }}.key"
+        dest: "/etc/ansible/temp/certs/"
+        flat: yes
+      with_items: "{{ groups['servers'] }}"
+
+- name: Distribute SSL Keys/Certs
+  hosts: docker-servers
+  gather_facts: no
+
+  vars:
+    docker_cert_path: "/var/lib/docker/volumes/proxy_certs/_data"
+    domain: in.bhutch.org
+
+  tasks:
+    - name: Copy SSL Certificates - Docker
+      copy:
+        src: "/etc/ansible/temp/certs/{{ inventory_hostname }}.{{ domain }}.crt"
+        dest: "{{ docker_cert_path }}/{{ inventory_hostname }}.{{ domain }}.crt"
+
+    - name: Copy SSL Keys - Docker
+      copy:
+        src: "/etc/ansible/temp/certs/{{ inventory_hostname }}.{{ domain }}.key"
+        dest: "{{ docker_cert_path }}/{{ inventory_hostname }}.{{ domain }}.key"
