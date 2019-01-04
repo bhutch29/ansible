@@ -1,46 +1,56 @@
 - name: Configure FreeIPA DNS records
-  hosts: ipa
+  hosts: ipa-servers
 
   vars:
-    dns_records:
-      - name: router
-        ip: 192.168.1.1
-      - name: proxmox1
-        ip: 192.168.1.97
-      - name: idrac.proxmox1
-        ip: 192.168.1.98
-      - name: pve
-        ip: 192.168.1.100
-      - name: gitlab
-        ip: 192.168.1.101
-      - name: pihole
-        ip: 192.168.1.102
-      - name: unifi
-        ip: 192.168.1.104
-      - name: unifivideo
-        ip: 192.168.1.106
-      - name: rack0pi
-        ip: 192.168.1.196
-      - name: idrac.pve
-        ip: 192.168.1.197
-      - name: garagedoor
-        ip: 192.168.1.198
-      - name: nut
-        ip: 192.168.1.199
-      - name: dockerhost
-        ip: 192.168.1.201
-      - name: nextcloud
-        ip: 192.168.1.201
+    domain: in.bhutch.org
+    ssl_cert_path: "/etc/pki/tls/certs"
+    ssl_key_path: "/etc/pki/tls/private"
 
   tasks:
     - name: Create IPA DNS records
       ipa_dnsrecord:
-        ipa_host: ipa.in.bhutch.org
+        ipa_host: "ipa.{{ domain }}"
         ipa_pass: Brzbat29
         state: present
-        zone_name: in.bhutch.org
-        record_name: "{{ item.name }}"
-        record_value: "{{ item.ip }}"
-        record_type: "{{ item.type | default('A') }}"
+        zone_name: "{{ domain }}"
+        record_name: "{{ item }}"
+        record_value: "{{ hostvars[item]['ip'] }}"
+        record_type: "A"
         record_ttl: 300
-      with_items: "{{ dns_records }}"
+      with_items: "{{ groups['servers'] }}"
+
+    - name: Create IPA Host Entries
+      ipa_host:
+        name: "{{ item }}.{{ domain }}"
+        ipa_host: "ipa.{{ domain }}"
+        ipa_pass: Brzbat29
+      with_items: "{{ groups['servers'] }}"
+
+    - name: Create IPA HTTP Services and Delegate to IPA Server
+      ipa_service:
+        name: "HTTP/{{ item }}.{{ domain }}"
+        hosts:
+          - "{{ item }}.{{ domain }}"
+          - "ipa.{{ domain }}"
+        ipa_host: "ipa.{{ domain }}"
+        ipa_pass: Brzbat29
+        state: present
+      with_items: "{{ groups['servers'] }}"
+
+    - name: Request SSL Certificates
+      command: ipa-getcert request \
+        -r \
+        -f '{{ ssl_cert_path }}/{{ item }}.{{ domain }}.crt' \
+        -k '{{ ssl_key_path }}/{{ item }}.{{ domain }}.key' \
+        -N 'CN={{ item }}.{{ domain }}' \
+        -D '{{ item }}.{{ domain }}' \
+        -K 'HTTP/{{ item }}.{{ domain }}'
+      args:
+        creates: '{{ ssl_cert_path }}/{{ item }}.{{ domain }}.crt'
+      with_items: "{{ groups['servers'] }}"
+
+    # - name: Copy SSL Certificates
+    #   # TODO: how to decide where to copy these to? Nginx reverse proxy? File on the host itself?
+    #   hosts: '{{ item.cert_target_host }}'
+    #   synchronize: 'src={{ ssl_cert_path }}/{{ item.name }}.{{ domain }}.crt dest={{ item.cert_target_folder }}'
+    #   delegate_to: ipa
