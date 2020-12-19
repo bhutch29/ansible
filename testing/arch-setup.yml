@@ -1,0 +1,111 @@
+- name: Setup arch-based workstation
+  gather_facts: no
+  hosts: localhost
+  connection: local
+
+  tasks:
+    - name: Install packages
+      become: yes
+      community.general.pacman:
+        state: present
+        name:
+          - fwupd
+          - udisks2
+          - vim
+          - ansible
+          - tlp # tp_smapi and acpi_call for Lenovos
+          - networkmanager
+          - networkmanager-openconnect
+          - network-manager-applet
+          - xorg-server
+          - xorg-apps
+          - xorg-xinit
+          - mesa
+          - xf86-video-amdgpu
+          - ttf-jetbrains-mono
+          - git
+          - openssh
+          - nfs-utils
+          - nftables
+          - firefox
+          - unclutter
+          - man-db
+          - stow
+          - flameshot
+          - dunst
+          - nnn # TODO: configure env variables
+          - fish # TODO: bob-the-fish, fzf, bass
+          - ripgrep
+          - rclone
+          - go
+          - go-tools
+          - rustup
+          - typescript
+          - dotnet-runtime
+          - dotnet-sdk
+          - rclone
+          - rsync
+          - rofi
+          - zathura
+          - zathura-pdf-mupdf
+          - chromium
+          - bat
+          - conky
+          - feh
+          - exfat-utils
+          - fzf
+          - nodejs
+          - openconnect
+          - pulsemixer
+          - pulseaudio
+          - pulseaudio-alsa
+          - samba
+          - smbclient
+          - sxiv
+          - tldr
+          - trayer
+          - earlyoom
+            
+    - name: Enable systemd units
+      become: yes
+      systemd:
+        enabled: yes
+        state: started
+        name: "{{ item }}"
+      with_items:
+        - NetworkManager
+        - systemd-timesyncd
+        - nftables
+        - earlyoom
+
+    - name: Create user
+      become: yes
+      user:
+        name: bhutch
+        state: present
+        generate_ssh_key: yes
+        ssh_key_bits: 2048
+        ssh_key_file: .ssh/id_rsa
+        shell: /usr/bin/fish
+
+    - name: Setup git email
+      community.general.git_config:
+        name: user.email
+        value: inukage0029@gmail.com
+        scope: global
+
+    - name: Setup git username
+      community.general.git_config:
+        name: user.name
+        value: Bradley Hutchinson
+        scope: global
+
+    - name: Clone scripts repo
+      git:
+        dest: ~/projects/scripts
+        repo: git@github.com:bhutch29/scripts.git
+
+    - name: Clone dotfiles repo
+      git:
+        dest: ~/dotfiles
+        repo: git@github.com:bhutch29/dotfiles.git

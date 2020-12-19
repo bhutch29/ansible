@@ -52,21 +52,3 @@
       add_host:
         name: 192.168.1.{{id}}
         groups: just_created
-
-- name: Setup newly created container(s)
-  hosts: just_created
-  gather_facts: False
-
-  tasks:
-    - import_tasks: install_python2.yml
-
-# - name: Add new container IP information to local dns
-#   hosts: dns
-#   gather_facts: False
-
-#   tasks:
-#     - name: add to pihole dns
-#       lineinfile:
-#         dest: /etc/pihole/lan.list
-#         regexp: .*{{containername}}.bsnetworks.com
-#         line: 192.168.1.{{id}} {{containername}}.bsnetworks.com
