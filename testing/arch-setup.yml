@@ -20,6 +20,8 @@
           - xorg-server
           - xorg-apps
           - xorg-xinit
+          - acpilight
+          - bc
           - mesa
           - xf86-video-amdgpu
           - ttf-jetbrains-mono
@@ -120,6 +122,12 @@
       git:
         dest: ~/dotfiles
         repo: git@github.com:bhutch29/dotfiles.git
+
+    - name: Clone org repo
+      tags: ['never', 'git']
+      git:
+        dest: ~/org
+        repo: git@github.com:bhutch29/org.git
 
     - name: Clone AUR repos
       tags: ['never', 'git']
