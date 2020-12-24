@@ -2,6 +2,68 @@
   gather_facts: yes
   hosts: localhost
   connection: local
+  vars:
+    packages:
+      - fwupd
+      - udisks2
+      - vim
+      - ansible
+      - networkmanager
+      - networkmanager-openconnect
+      - network-manager-applet
+      - xorg-server
+      - xorg-apps
+      - xorg-xinit
+      - acpi_call # TODO: for Lenovos
+      - bc
+      - mesa
+      - ttf-jetbrains-mono
+      - git
+      - openssh
+      - nfs-utils
+      - nftables
+      - firefox
+      - unclutter
+      - man-db
+      - stow
+      - flameshot
+      - dunst
+      - nnn
+      - fish
+      - ripgrep
+      - rclone
+      - go
+      - go-tools
+      - rustup
+      - typescript
+      - dotnet-runtime
+      - dotnet-sdk
+      - rclone
+      - rsync
+      - rofi
+      - zathura
+      - zathura-pdf-mupdf
+      - chromium
+      - bat
+      - conky
+      - feh
+      - exfat-utils
+      - fzf
+      - nodejs
+      - openconnect
+      - pulsemixer
+      - pulseaudio
+      - pulseaudio-alsa
+      - samba
+      - smbclient
+      - sxiv
+      - tldr
+      - trayer
+      - earlyoom
+      - ttf-dejavu
+      - gnome-keyring
+      - emacs
+      - screenfetch
 
   tasks:
     - name: Check if AMD or Intel
@@ -16,6 +78,37 @@
         name:
           - xf86-video-amdgpu
 
+    - name: Install packages
+      become: yes
+      community.general.pacman:
+        state: present
+        name: "{{ packages }}"
+            
+    - name: Laptop-specific tasks
+      tags: ['always', 'laptop']
+      block:
+        - name: install laptop-specific packages
+          community.general.pacman:
+            state: present
+            name:
+              - tlp
+              - acpilight
+
+        - name: Enable laptop-specific systemd units
+          become: yes
+          systemd:
+            enabled: yes
+            state: started
+            name: "{{ item }}"
+          loop:
+            - tlp
+
+        - name: Copy touchpad X11 conf file
+          become: yes
+          copy:
+            src: {{ playbook_dir }}/files/30-touchpad.conf
+            dest: /etc/X11/xorg.conf.d/30-touchpad.conf
+
     - name: Copy amdgpu X11 conf file
       become: yes
       when: is_amd
@@ -23,104 +116,13 @@
         src: {{ playbook_dir }}/files/20-amdgpu.conf
         dest: /etc/X11/xorg.conf.d/20-amdgpu.conf
 
-    - name: Copy touchpad X11 conf file
-      tags: ['always', 'laptop']
-      become: yes
-      copy:
-        src: {{ playbook_dir }}/files/30-touchpad.conf
-        dest: /etc/X11/xorg.conf.d/30-touchpad.conf
-
-    - name: install laptop-specific packages
-      tags: ['always', 'laptop']
-      community.general.pacman:
-        state: present
-        name:
-          - tlp
-          - acpilight
-
-    - name: Install packages
-      become: yes
-      community.general.pacman:
-        state: present
-        name:
-          - fwupd
-          - udisks2
-          - vim
-          - ansible
-          - networkmanager
-          - networkmanager-openconnect
-          - network-manager-applet
-          - xorg-server
-          - xorg-apps
-          - xorg-xinit
-          - acpi_call # TODO: for Lenovos
-          - bc
-          - mesa
-          - ttf-jetbrains-mono
-          - git
-          - openssh
-          - nfs-utils
-          - nftables
-          - firefox
-          - unclutter
-          - man-db
-          - stow
-          - flameshot
-          - dunst
-          - nnn
-          - fish
-          - ripgrep
-          - rclone
-          - go
-          - go-tools
-          - rustup
-          - typescript
-          - dotnet-runtime
-          - dotnet-sdk
-          - rclone
-          - rsync
-          - rofi
-          - zathura
-          - zathura-pdf-mupdf
-          - chromium
-          - bat
-          - conky
-          - feh
-          - exfat-utils
-          - fzf
-          - nodejs
-          - openconnect
-          - pulsemixer
-          - pulseaudio
-          - pulseaudio-alsa
-          - samba
-          - smbclient
-          - sxiv
-          - tldr
-          - trayer
-          - earlyoom
-          - ttf-dejavu
-          - gnome-keyring
-          - emacs
-          - screenfetch
-            
-    - name: Enable laptop-specific systemd units
-      tags: ['always', 'laptop']
-      become: yes
-      systemd:
-        enabled: yes
-        state: started
-        name: "{{ item }}"
-      with_items:
-        - tlp
-
     - name: Enable systemd units
       become: yes
       systemd:
         enabled: yes
         state: started
         name: "{{ item }}"
-      with_items:
+      loop:
         - NetworkManager
         - systemd-timesyncd
         - nftables
@@ -160,72 +162,69 @@
         value: false
         scope: global
 
-    - name: Clone scripts repo
+    - name: Clone git repositories
       tags: ['never', 'git']
-      git:
-        dest: ~/scripts
-        repo: git@github.com:bhutch29/scripts.git
-        update: no
+      block:
+        - name: Clone scripts repo
+          git:
+            dest: ~/scripts
+            repo: git@github.com:bhutch29/scripts.git
+            update: no
+    
+        - name: Clone dotfiles repo
+          git:
+            dest: ~/dotfiles
+            repo: git@github.com:bhutch29/dotfiles.git
+            update: no
 
-    - name: Clone dotfiles repo
-      tags: ['never', 'git']
-      git:
-        dest: ~/dotfiles
-        repo: git@github.com:bhutch29/dotfiles.git
-        update: no
+        - name: Clone org repo
+          git:
+            dest: ~/org
+            repo: git@github.com:bhutch29/org.git
+            update: no
+
+        - name: Clone spacemacs
+          git:
+            dest: ~/.emacs.d
+            repo: git@github.com:bhutch29/org.git
+            update: no
+
+        - name: Clone intellimacs repo
+          git:
+            dest: ~/.intellimacs
+            repo: https://github.com/MarcoIeni/intellimacs
+            update: no
+    
+        - name: Clone intellimacs repo
+          git:
+            dest: ~/.emacs.d
+            repo: https://github.com/syl20bnr/spacemacs
+            update: no
+
+        - name: Clone AUR repos
+          git:
+            dest: ~/pkgbuilds
+            repo: https://aur.archlinux.org/{{ item }}.git
+            update: no
+          loop:
+            - nerd-fonts-jetbrains-mono
+            - gcc8
+            - gotop
+            - angular-cli
+            - conan
+            - slack-desktop
+            - jetbrains-toolbox
+            - yay
+            - networkmanager-dmenu-git
+            - rofi-dmenu
+            - i3lock-color
 
     - name: Run Gnu Stow
       command:
         path: ~/dotfiles
         cmd: stow {{ item }}     
         creates: ~/.conkyrc
-      with_items:
+      loop:
         - vim
         - misc
 
-    - name: Clone org repo
-      tags: ['never', 'git']
-      git:
-        dest: ~/org
-        repo: git@github.com:bhutch29/org.git
-        update: no
-
-    - name: Clone spacemacs
-      tags: ['never', 'git']
-      git:
-        dest: ~/.emacs.d
-        repo: git@github.com:bhutch29/org.git
-        update: no
-
-    - name: Clone intellimacs repo
-      tags: ['never', 'git']
-      git:
-        dest: ~/.intellimacs
-        repo: https://github.com/MarcoIeni/intellimacs
-        update: no
-
-    - name: Clone intellimacs repo
-      tags: ['never', 'git']
-      git:
-        dest: ~/.emacs.d
-        repo: https://github.com/syl20bnr/spacemacs
-        update: no
-
-    - name: Clone AUR repos
-      tags: ['never', 'git']
-      git:
-        dest: ~/pkgbuilds
-        repo: https://aur.archlinux.org/{{ item }}.git
-        update: no
-      with_items:
-        - nerd-fonts-jetbrains-mono
-        - gcc8
-        - gotop
-        - angular-cli
-        - conan
-        - slack-desktop
-        - jetbrains-toolbox
-        - yay
-        - networkmanager-dmenu-git
-        - rofi-dmenu
-        - i3lock-color
