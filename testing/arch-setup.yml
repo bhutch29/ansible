@@ -129,6 +129,24 @@
         dest: ~/org
         repo: git@github.com:bhutch29/org.git
 
+    - name: Clone spacemacs
+      tags: ['never', 'git']
+      git:
+        dest: ~/.emacs.d
+        repo: git@github.com:bhutch29/org.git
+
+    - name: Clone intellimacs repo
+      tags: ['never', 'git']
+      git:
+        dest: ~/.intellimacs
+        repo: https://github.com/MarcoIeni/intellimacs
+
+    - name: Clone intellimacs repo
+      tags: ['never', 'git']
+      git:
+        dest: ~/.emacs.d
+        repo: https://github.com/syl20bnr/spacemacs
+
     - name: Clone AUR repos
       tags: ['never', 'git']
       git:
@@ -153,4 +171,3 @@
 # auto-login tty1
 # /etc/X11/xorg.conf.d/20-amdgpu.conf tearing
 # /etc/X11/xorg.conf.d/30-touchpad.conf natural scrolling
-# intellimacs
