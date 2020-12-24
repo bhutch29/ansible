@@ -23,7 +23,7 @@
         src: {{ playbook_dir }}/files/20-amdgpu.conf
         dest: /etc/X11/xorg.conf.d/20-amdgpu.conf
 
-    - name: Copy amdgpu X11 conf file
+    - name: Copy touchpad X11 conf file
       tags: ['always', 'laptop']
       become: yes
       copy:
@@ -229,7 +229,3 @@
         - networkmanager-dmenu-git
         - rofi-dmenu
         - i3lock-color
-
-# TODO
-# configure thresholds in /etc/tlp.conf
-# auto-login tty1

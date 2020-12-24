@@ -1,0 +1,8 @@
+- name: Test stuff
+  hosts: localhost
+  connection: local
+
+  tasks:
+    - name: Print cpu count
+      debug:
+        msg: "{{ ansible_facts['processor_vcpus']}}"
