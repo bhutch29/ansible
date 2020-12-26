@@ -12,7 +12,6 @@
       - networkmanager-openconnect
       - network-manager-applet
       - xorg-server
-      - xorg-apps
       - xorg-xinit
       - acpi_call # TODO: for Lenovos
       - bc
@@ -69,6 +68,7 @@
     - name: Check if AMD or Intel
       command: grep -q AMD /proc/cpuinfo
       ignore_errors: true
+      changed_when: false
       register: is_amd
 
     - name: install AMD-specific packages
@@ -78,7 +78,7 @@
         name:
           - xf86-video-amdgpu
 
-    - name: Install packages
+    - name: Install general packages
       become: yes
       community.general.pacman:
         state: present
@@ -106,14 +106,14 @@
         - name: Copy touchpad X11 conf file
           become: yes
           copy:
-            src: {{ playbook_dir }}/files/30-touchpad.conf
+            src: "{{ playbook_dir }}/files/30-touchpad.conf"
             dest: /etc/X11/xorg.conf.d/30-touchpad.conf
 
     - name: Copy amdgpu X11 conf file
       become: yes
       when: is_amd
       copy:
-        src: {{ playbook_dir }}/files/20-amdgpu.conf
+        src: "{{ playbook_dir }}/files/20-amdgpu.conf"
         dest: /etc/X11/xorg.conf.d/20-amdgpu.conf
 
     - name: Enable systemd units
@@ -127,6 +127,7 @@
         - systemd-timesyncd
         - nftables
         - earlyoom
+        - sshd
 
     - name: Create user
       become: yes
@@ -139,10 +140,18 @@
         shell: /usr/bin/fish
 
     - name: Configure makepkg processor count
+      become: yes
       lineinfile:
         path: /etc/makepkg.conf
-        regexp: 'MAKEFLAGS='
+        regexp: '^#MAKEFLAGS='
         line: MAKEFLAGS="-j{{ ansible_facts['processor_vcpus']}}"
+
+    - name: Enable colored pacman output
+      become: yes
+      lineinfile:
+        path: /etc/makepkg.conf
+        regexp: '^#Color'
+        line: Color
 
     - name: Setup git email
       community.general.git_config:
@@ -159,7 +168,7 @@
     - name: Setup git pull method
       community.general.git_config:
         name: pull.rebase
-        value: false
+        value: "false"
         scope: global
 
     - name: Clone git repositories
@@ -221,7 +230,7 @@
 
     - name: Run Gnu Stow
       command:
-        path: ~/dotfiles
+        chdir: ~/dotfiles
         cmd: stow {{ item }}     
         creates: ~/.conkyrc
       loop:
