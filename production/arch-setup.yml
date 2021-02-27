@@ -149,14 +149,14 @@
       lineinfile:
         path: /etc/xdg/reflector/reflector.conf
         regexp: '^# --country'
-        line: '--country US'
+        line: --country US
 
     - name: Enable YAML-based Ansible stdout
       become: yes
       lineinfile:
         path: /etc/ansible/ansible.cfg
         regexp: '^#stdout_callback = yaml'
-        line: 'stdout_callback = yaml'
+        line: stdout_callback = yaml
 
     - name: Create user
       become: yes
