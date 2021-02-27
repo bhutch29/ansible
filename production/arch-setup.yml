@@ -67,6 +67,17 @@
       - reflector
       - python-pip
       - nmap
+    aur_packages:
+      - nerd-fonts-jetbrains-mono
+      - gcc8
+      - gotop
+      - angular-cli
+      - slack-desktop
+      - jetbrains-toolbox
+      - yay
+      - networkmanager-dmenu-git
+      - rofi-dmenu
+      - i3lock-color
 
   tasks:
     - name: Check if AMD or Intel
@@ -140,6 +151,13 @@
         regexp: '^# --country'
         line: '--country US'
 
+    - name: Enable YAML-based Ansible stdout
+      become: yes
+      lineinfile:
+        path: /etc/ansible/ansible.cfg
+        regexp: '^#stdout_callback = yaml'
+        line: 'stdout_callback = yaml'
+
     - name: Create user
       become: yes
       user:
@@ -194,17 +212,7 @@
     - name: Gather AUR Repos
       set_fact:
         git_repos: "{{ git_repos + [{'dest': '~/pkgbuilds/' + item, 'repo': 'https://aur.archlinux.org/' + item + '.git'}] }}"
-      loop:
-        - nerd-fonts-jetbrains-mono
-        - gcc8
-        - gotop
-        - angular-cli
-        - slack-desktop
-        - jetbrains-toolbox
-        - yay
-        - networkmanager-dmenu-git
-        - rofi-dmenu
-        - i3lock-color
+      loop: "{{ aur_packages }}"
 
     - name: Clone git repositories
       include_tasks: git_clone_idempotent.yml
