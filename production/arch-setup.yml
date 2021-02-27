@@ -65,6 +65,8 @@
       - autorandr
       - pandoc
       - reflector
+      - python-pip
+      - nmap
 
   tasks:
     - name: Check if AMD or Intel
@@ -180,62 +182,33 @@
         value: "false"
         scope: global
 
+    - name: Gather Git Repos
+      set_fact:
+        git_repos:
+          - {dest: ~/scripts, repo: git@github.com:bhutch29/scripts.git}
+          - {dest: ~/dotfiles, repo: git@github.com:bhutch29/dotfiles.git}
+          - {dest: ~/org, repo: git@github.com:bhutch29/org.git}
+          - {dest: ~/.emacs.d, repo: https://github.com/syl20bnr/spacemacs}
+          - {dest: ~/.intellimacs, repo: https://github.com/MarcoIeni/intellimacs}
+
+    - name: Gather AUR Repos
+      set_fact:
+        git_repos: "{{ git_repos + [{'dest': '~/pkgbuilds/' + item, 'repo': 'https://aur.archlinux.org/' + item + '.git'}] }}"
+      loop:
+        - nerd-fonts-jetbrains-mono
+        - gcc8
+        - gotop
+        - angular-cli
+        - slack-desktop
+        - jetbrains-toolbox
+        - yay
+        - networkmanager-dmenu-git
+        - rofi-dmenu
+        - i3lock-color
+
     - name: Clone git repositories
-      tags: ['never', 'git']
-      block:
-        - name: Clone scripts repo
-          git:
-            dest: ~/scripts
-            repo: git@github.com:bhutch29/scripts.git
-            update: no
-    
-        - name: Clone dotfiles repo
-          git:
-            dest: ~/dotfiles
-            repo: git@github.com:bhutch29/dotfiles.git
-            update: no
-
-        - name: Clone org repo
-          git:
-            dest: ~/org
-            repo: git@github.com:bhutch29/org.git
-            update: no
-
-        - name: Clone spacemacs
-          git:
-            dest: ~/.emacs.d
-            repo: git@github.com:bhutch29/org.git
-            update: no
-
-        - name: Clone intellimacs repo
-          git:
-            dest: ~/.intellimacs
-            repo: https://github.com/MarcoIeni/intellimacs
-            update: no
-    
-        - name: Clone spacemacs repo
-          git:
-            dest: ~/.emacs.d
-            repo: https://github.com/syl20bnr/spacemacs
-            update: no
-
-        - name: Clone AUR repos
-          git:
-            dest: ~/pkgbuilds
-            repo: https://aur.archlinux.org/{{ item }}.git
-            update: no
-          loop:
-            - nerd-fonts-jetbrains-mono
-            - gcc8
-            - gotop
-            - angular-cli
-            - conan
-            - slack-desktop
-            - jetbrains-toolbox
-            - yay
-            - networkmanager-dmenu-git
-            - rofi-dmenu
-            - i3lock-color
+      include_tasks: git_clone_idempotent.yml
+      loop: "{{ git_repos }}"
 
     - name: Run Gnu Stow
       command:

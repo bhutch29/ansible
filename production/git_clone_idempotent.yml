@@ -1,0 +1,11 @@
+- name: Get details of {{ item.repo }} repository
+  stat:
+    path: "{{ item.dest }}"
+  register: dest
+
+- name: Clone {{ item.repo }} repository
+  git:
+    dest: "{{ item.dest }}"
+    repo: "{{ item.repo }}"
+    update: no
+  when: not dest.stat.exists
