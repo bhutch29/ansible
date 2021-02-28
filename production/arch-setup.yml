@@ -67,6 +67,7 @@
       - reflector
       - python-pip
       - nmap
+      - libqalculate
     aur_packages:
       - nerd-fonts-jetbrains-mono
       - gcc8
@@ -129,6 +130,17 @@
       copy:
         src: "{{ playbook_dir }}/files/20-amdgpu.conf"
         dest: /etc/X11/xorg.conf.d/20-amdgpu.conf
+
+    - name: Create emacsclient desktop entry
+      become: yes
+      copy:
+        src: "{{ playbook_dir }}/files/emacsclient.desktop"
+        dest: /usr/share/applications/emacsclient.desktop
+
+    - name: Set emacsclient as default editor for text/plain files
+      command: 
+        cmd: xdg-mime default emacsclient.desktop text/plain
+      changed_when: false # Ideally we would check first, but this is simple
 
     - name: Enable systemd units
       become: yes
