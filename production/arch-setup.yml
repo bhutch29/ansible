@@ -68,9 +68,13 @@
       - python-pip
       - nmap
       - libqalculate
+      - w3m
+      - ncdu
+      - croc
+      - spotifyd
+      - docker
     aur_packages:
       - nerd-fonts-jetbrains-mono
-      - gcc8
       - gotop
       - angular-cli
       - slack-desktop
@@ -79,6 +83,7 @@
       - networkmanager-dmenu-git
       - rofi-dmenu
       - i3lock-color
+      - spotify-tui
 
   tasks:
     - name: Check if AMD or Intel
@@ -155,6 +160,8 @@
         - earlyoom
         - sshd
         - reflector.timer
+        - spotifyd
+        - docker
 
     - name: Configure reflector
       become: yes
@@ -190,7 +197,7 @@
     - name: Enable colored pacman output
       become: yes
       lineinfile:
-        path: /etc/makepkg.conf
+        path: /etc/pacman.conf
         regexp: '^#Color'
         line: Color
 
