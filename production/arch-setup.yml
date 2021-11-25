@@ -16,6 +16,8 @@
       - bc
       - mesa
       - ttf-jetbrains-mono
+      - zip
+      - unzip
       - git
       - openssh
       - nfs-utils
@@ -73,10 +75,13 @@
       - croc
       - spotifyd
       - docker
+      - ruby
+      - ruby-irb
+      - tree
+      - xplr
     aur_packages:
       - nerd-fonts-jetbrains-mono
       - gotop
-      - angular-cli
       - slack-desktop
       - jetbrains-toolbox
       - yay
@@ -162,6 +167,7 @@
         - reflector.timer
         - spotifyd
         - docker
+        - fstrim
 
     - name: Configure reflector
       become: yes
