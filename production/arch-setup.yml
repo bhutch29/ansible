@@ -35,6 +35,7 @@
       - go
       - go-tools
       - rustup
+      - rust-analyzer
       - typescript
       - dotnet-runtime
       - dotnet-sdk
