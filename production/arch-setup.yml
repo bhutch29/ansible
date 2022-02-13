@@ -80,6 +80,7 @@
       - ruby-irb
       - tree
       - xplr
+      - xclip
     aur_packages:
       - nerd-fonts-jetbrains-mono
       - gotop
@@ -141,6 +142,11 @@
       copy:
         src: "{{ playbook_dir }}/files/20-amdgpu.conf"
         dest: /etc/X11/xorg.conf.d/20-amdgpu.conf
+
+    - name: Copy ssh config file
+      copy:
+        src: "{{ playbook_dir }}/files/ssh/config"
+        dest: ~/.ssh/config
 
     - name: Create emacsclient desktop entry
       become: yes
