@@ -1,5 +1,0 @@
-- name: point to apt-cacher-ng
-  copy:
-    dest: /etc/apt/apt.conf.d/02proxy
-    content: Acquire::http::Proxy "http://192.168.1.103:3142";
-

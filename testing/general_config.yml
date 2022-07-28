@@ -1,8 +1,0 @@
-- name: apt update and upgrade all Ubuntu devices
-  hosts: ubuntu
-
-  tasks:
-     - include_tasks: apt_update_and_upgrade.yml
-
-
-# TODO: Add DietPi devices update/upgrade
