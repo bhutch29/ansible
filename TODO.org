@@ -1,0 +1,14 @@
+* TODO
+** Host filesystem
+Don't automate
+ZFS mirror on M.2
+** Host OS
+Don't automate
+*** Proxmox
+https://github.com/tteck/Proxmox#-proxmox-ve-7-post-install-
+*** TrueNAS
+** Proxmox configuration
+Don't automate
+** ZFS configuration
+
+** VPN

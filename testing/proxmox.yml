@@ -1,0 +1,35 @@
+- name: Setup Proxmox
+  hosts: TODO
+  gather_facts: False
+  vars:
+    pubkey: "{{ lookup('file', 'files/public_keys/TODO') }}"
+    containers:
+      - {name: dockerhost, id: 101}
+
+  tasks:
+    - name: Create ZFS file system, add to PVE
+      include_tasks: zfs.yml
+      loop: {{containers}} #TODO: map to names
+
+    - name: Create dockerhost LXC container
+      community.general.proxmox:
+        vmid: {{item.id}}
+        node: pve
+        api_user: root@pam
+        api_password: 1q2w3e
+        api_host: pve
+        password: 123456
+        hostname: {{item.name}}
+        # TODO: Alpine Linux
+        ostemplate: 'local:vztmpl/ubuntu-14.04-x86_64.tar.gz'
+        netif: '{"net0":"name=eno1,gw=192.168.1.1,ip=192.168.1.{{item.id}}/24,bridge=vmbr0"}'
+        mounts: '{"mp0":"{{item.name}}:8,mp=/mnt/appdata"}'
+        state: started
+        cores: TODO
+        memory: TODO
+        pubkey: {{pubkey}}
+        onboot: yes
+        unprivileged: yes
+        storage: vmstorage
+      loop: {{containers}}
+        

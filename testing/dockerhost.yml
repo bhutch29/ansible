@@ -1,0 +1,23 @@
+- name: Setup dockerhost
+  hosts: TODO
+  gather_facts: False
+  vars:
+
+  tasks:
+    - name: Copy docker-compose.yml file
+      become: yes
+      copy:
+        src: "{{ playbook_dir }}/files/docker-compose.yml"
+        dest: ~/docker-compose.yml
+
+    - name: Install latest Docker version
+      community.general.apk:
+        name: docker
+        state: latest
+        update_cache: yes
+
+    - name: Enable/start docker systemd unit
+      systemd:
+        enabled: yes
+        state: started
+        name: docker

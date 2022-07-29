@@ -1,54 +1,12 @@
-- name: Create new Proxmox Container (new ZFS file system, new LXC container, start it)
-  hosts: 127.0.0.1
-  connection: local
-  gather_facts: False
+- name: create {{item.name}} zfs file system
+  zfs:
+    name: "tank/appdata/{{item.name}}"
+    state: present
 
-  vars:
-    pool: vmstorage
-    mountsize: 8
-    template: iso:vztmpl/ubuntu-16.04-standard_16.04-1_amd64.tar.gz
-    cores: 1
-    memory: 512
-    onboot: no
-    publickey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDWfht6OxrIGhUeurb+SmFBycL7plnmIDvcLiM6jf6YiasXlEg7/RaoOfaTaZGOWt0SikSIyU4dB8HkBKnoJDH7NfYavDR7R9fayE0AT9zY+XTjIoXOa+SpxqfV9Um2d9wPhHf8hLPmU8tmdKP34aQqmV8V7R32fzb0nRPYOm++Zz4Uoz3Y9PWmG80XEPHb0Z+FdhIdyS/9ZDmJvXcvKXkrQu9LrobpzcXV1KtWeTmLaYDbLk1akE+D5wRAPgHQalMrXE/h232UPniiq1FIQXelgRZHzu8dkmRl5xv+BiYft0uop3ouoz3q0CZ/dSneJsNgSVcde0qswxKzAg2soMD/ root@pve
+- name: get ZFS storage list from PVE
+  command: pvesm status
+  register: proxmox_zfs_status
 
-  tasks:
-    - name: create zfs file system
-      zfs:
-        name: "tank/appdata/{{containername | mandatory}}"
-        state: present
-    - name: get ZFS storage list from PVE
-      command: pvesm status
-      register: proxmox_zfs_status
-    - name: add file system to PVE
-      shell: pvesm add zfspool {{containername | mandatory}} -pool tank/appdata/{{containername | mandatory}} -blocksize 8k
-      when: not proxmox_zfs_status.stdout | search(containername)
-    - name: create LXC container in Proxmox based on specified template variable. Default Ubuntu 16.04
-      proxmox:
-        vmid: "{{id | mandatory}}"
-        node: pve
-        api_user: root@pam
-        api_password: Brzbat29
-        api_host: pve
-        password: Brzbat29
-        hostname: "{{containername | mandatory}}"
-        ostemplate: "{{template}}"
-        netif: '{"net0":"name=eno1,gw=192.168.1.1,ip=192.168.1.{{id}}/24,bridge=vmbr0"}'
-        mounts: '{"mp0":"{{containername | mandatory}}:{{mountsize}},mp=/mnt/appdata"}'
-        cores: "{{cores}}"
-        memory: "{{memory}}"
-        state: present
-        pubkey: "{{publickey}}"
-        onboot: "{{onboot}}" 
-        storage: vmstorage
-    - name: start container
-      proxmox:
-        vmid: "{{id}}"
-        api_user: root@pam
-        api_password: Brzbat29
-        api_host: pve
-        state: started
-    - name: add host to temporary inventory
-      add_host:
-        name: 192.168.1.{{id}}
-        groups: just_created
+- name: add {{item.name}} file system to PVE
+  shell: pvesm add zfspool {{item.name}} -pool tank/appdata/{{item}} -blocksize 8k
+  when: not proxmox_zfs_status.stdout | search(item.name)
