@@ -12,3 +12,16 @@ Don't automate
 ** ZFS configuration
 
 ** VPN
+
+* Notes from PVE setup (need to automate)
+nameserver 8.8.8.8
+apt install vim
+
+
+* List of containers to ZFS ids
+102: pihole
+104: unifi
+106: unifivideo
+107: nginx0
+110: mqttclient
+111: workout
