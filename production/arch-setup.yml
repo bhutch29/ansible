@@ -82,6 +82,7 @@
       - xplr
       - xclip
       - ccache
+      - neovim
     aur_packages:
       - nerd-fonts-jetbrains-mono
       - gotop
@@ -264,6 +265,5 @@
         cmd: stow {{ item }}     
         creates: ~/.conkyrc
       loop:
-        - vim
         - misc
 
