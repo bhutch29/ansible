@@ -83,6 +83,9 @@
       - xclip
       - ccache
       - neovim
+      - jedi-language-server
+      - typescript-language-server
+      - lua-language-server
     aur_packages:
       - nerd-fonts-jetbrains-mono
       - gotop
