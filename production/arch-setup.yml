@@ -86,6 +86,7 @@
       - jedi-language-server
       - typescript-language-server
       - lua-language-server
+      - fd
     aur_packages:
       - nerd-fonts-jetbrains-mono
       - gotop
@@ -244,13 +245,18 @@
         value: "false"
         scope: global
 
+    - name: Setup git push method
+      community.general.git_config:
+        name: push.default
+        value: "current"
+        scope: global
+
     - name: Gather Git Repos
       set_fact:
         git_repos:
           - {dest: ~/scripts, repo: git@github.com:bhutch29/scripts.git}
           - {dest: ~/dotfiles, repo: git@github.com:bhutch29/dotfiles.git}
           - {dest: ~/org, repo: git@github.com:bhutch29/org.git}
-          - {dest: ~/.emacs.d, repo: https://github.com/syl20bnr/spacemacs}
           - {dest: ~/.intellimacs, repo: https://github.com/MarcoIeni/intellimacs}
 
     - name: Gather AUR Repos
