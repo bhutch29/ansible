@@ -82,6 +82,10 @@
       - xclip
       - ccache
       - neovim
+      - jedi-language-server
+      - typescript-language-server
+      - lua-language-server
+      - fd
     aur_packages:
       - nerd-fonts-jetbrains-mono
       - gotop
@@ -227,6 +231,12 @@
       community.general.git_config:
         name: pull.rebase
         value: "false"
+        scope: global
+
+    - name: Setup git push method
+      community.general.git_config:
+        name: push.default
+        value: "current"
         scope: global
 
     - name: Gather Git Repos
