@@ -63,7 +63,6 @@
       - earlyoom
       - ttf-dejavu
       - gnome-keyring
-      - emacs
       - screenfetch
       - autorandr
       - pandoc
@@ -149,17 +148,6 @@
       copy:
         src: "{{ playbook_dir }}/files/ssh/config"
         dest: ~/.ssh/config
-
-    - name: Create emacsclient desktop entry
-      become: yes
-      copy:
-        src: "{{ playbook_dir }}/files/emacsclient.desktop"
-        dest: /usr/share/applications/emacsclient.desktop
-
-    - name: Set emacsclient as default editor for text/plain files
-      command: 
-        cmd: xdg-mime default emacsclient.desktop text/plain
-      changed_when: false # Ideally we would check first, but this is simple
 
     - name: Enable systemd units
       become: yes
@@ -247,8 +235,6 @@
           - {dest: ~/scripts, repo: git@github.com:bhutch29/scripts.git}
           - {dest: ~/dotfiles, repo: git@github.com:bhutch29/dotfiles.git}
           - {dest: ~/org, repo: git@github.com:bhutch29/org.git}
-          - {dest: ~/.emacs.d, repo: https://github.com/syl20bnr/spacemacs}
-          - {dest: ~/.intellimacs, repo: https://github.com/MarcoIeni/intellimacs}
 
     - name: Gather AUR Repos
       set_fact:
