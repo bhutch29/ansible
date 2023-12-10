@@ -86,6 +86,8 @@
       - typescript-language-server
       - lua-language-server
       - fd
+      - eza
+      - git-delta
     aur_packages:
       - nerd-fonts-jetbrains-mono
       - gotop
@@ -214,30 +216,6 @@
         path: /etc/pacman.conf
         regexp: '^#ParallelDownloads'
         line: ParallelDownloads = 5
-
-    - name: Setup git email
-      community.general.git_config:
-        name: user.email
-        value: inukage0029@gmail.com
-        scope: global
-
-    - name: Setup git username
-      community.general.git_config:
-        name: user.name
-        value: Bradley Hutchinson
-        scope: global
-
-    - name: Setup git pull method
-      community.general.git_config:
-        name: pull.rebase
-        value: "false"
-        scope: global
-
-    - name: Setup git push method
-      community.general.git_config:
-        name: push.default
-        value: "current"
-        scope: global
 
     - name: Gather Git Repos
       set_fact:
