@@ -89,6 +89,7 @@
       - eza
       - git-delta
       - broot
+      - duf
     aur_packages:
       - nerd-fonts-jetbrains-mono
       - gotop
