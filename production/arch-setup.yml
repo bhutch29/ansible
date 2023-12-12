@@ -90,6 +90,7 @@
       - git-delta
       - broot
       - duf
+      - tailscale
     aur_packages:
       - nerd-fonts-jetbrains-mono
       - gotop
@@ -168,6 +169,7 @@
         - spotifyd
         - docker
         - fstrim
+        - tailscaled
 
     - name: Configure reflector
       become: yes
