@@ -1,0 +1,5 @@
+  - name: Proxmox
+    ansible.builtin.import_playbook: proxmox.yml
+
+  - name: Tailscale
+    ansible.builtin.import_playbook: tailscale_lxc.yml
