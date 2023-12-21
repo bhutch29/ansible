@@ -2,19 +2,8 @@
   hosts: proxmox
   remote_user: root
   gather_facts: False
-  vars:
-    containers:
-      # - {name: dockerhost, id: 201, cores: 2, memory: 16000, swap: 1024, storage: 16G}
-      # - {name: media, id: 202, cores: 2, memory: 8192, swap: 1024, storage: 16G}
-      # - {name: tailnode, id: 210, cores: 1, memory: 2048, swap: 512, storage: 16G}
-      - {name: test, id: 208, cores: 1, memory: 2048, swap: 512, storage: 16G}
 
   tasks:
-    # - name: Create ZFS file system, add to PVE
-    #   when: item.TODO
-    #   include_tasks: zfs.yml
-    #   loop: {{containers}}
-
     - name: Create LXC container
       community.general.proxmox:
         vmid: "{{item.id}}"
@@ -26,7 +15,7 @@
         hostname: "{{item.name}}"
         ostemplate: 'local:vztmpl/alpine-3.18-default_20230607_amd64.tar.xz'
         netif: '{"net0":"name=eth0,gw=192.168.1.1,ip=192.168.1.{{item.id}}/24,bridge=vmbr0"}'
-        disk: 16
+        disk: "{{item.storage}}"
         mounts: '{"mp0":"/mnt/pve/share,mp=/mnt/share"}'
         state: present
         cores: "{{item.cores}}"
@@ -67,4 +56,25 @@
     - name: Enable SSH
       changed_when: false
       shell: echo "rc-update add sshd && service sshd start" | pct enter {{item.id}}
+      loop: "{{containers}}"
+
+    - name: Install python
+      changed_when: false
+      shell: echo "apk add python3" | pct enter {{item.id}}
+      loop: "{{containers}}"
+
+    - name: Permit tunnel for tailscale part 1
+      become: yes
+      lineinfile:
+        path: /etc/pve/lxc/{{item.id}}.conf
+        regexp: '^lxc.cgroup2.devices.allow'
+        line: 'lxc.cgroup2.devices.allow: c 10:200 rwm'
+      loop: "{{containers}}"
+
+    - name: Permit tunnel for tailscale part 2
+      become: yes
+      lineinfile:
+        path: /etc/pve/lxc/{{item.id}}.conf
+        regexp: '^lxc.mount.entry'
+        line: 'lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file'
       loop: "{{containers}}"

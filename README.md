@@ -1,2 +1,2 @@
-ansible-playbook production/proxmox.yml --extra-vars "api_password=Jljou977 container_password=Jljou977" -k
+ansible-playbook production/proxmox.yml --extra-vars "api_password=TODO container_password=TODO" -k
 
