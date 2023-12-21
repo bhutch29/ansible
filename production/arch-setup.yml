@@ -91,6 +91,7 @@
       - broot
       - duf
       - tailscale
+      - obsidian
     aur_packages:
       - nerd-fonts-jetbrains-mono
       - gotop
@@ -222,6 +223,7 @@
           - {dest: ~/scripts, repo: git@github.com:bhutch29/scripts.git}
           - {dest: ~/dotfiles, repo: git@github.com:bhutch29/dotfiles.git}
           - {dest: ~/org, repo: git@github.com:bhutch29/org.git}
+          - {dest: ~/obsidian, repo: git@github.com:bhutch29/obsidian.git}
 
     - name: Gather AUR Repos
       set_fact:
