@@ -8,5 +8,5 @@
   register: proxmox_zfs_status
 
 - name: add {{item.name}} file system to PVE
-  shell: pvesm add zfspool {{item.name}} -pool tank/appdata/{{item}} -blocksize 8k
+  shell: pvesm add zfspool {{item.name}} -pool tank/appdata/{{item.name}} -blocksize 8k
   when: not proxmox_zfs_status.stdout | search(item.name)
