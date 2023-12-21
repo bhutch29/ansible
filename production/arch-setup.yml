@@ -225,6 +225,7 @@
           - {dest: ~/org, repo: git@github.com:bhutch29/org.git}
           - {dest: ~/obsidian, repo: git@github.com:bhutch29/obsidian.git}
 
+            # TODO: replace with yay
     - name: Gather AUR Repos
       set_fact:
         git_repos: "{{ git_repos + [{'dest': '~/pkgbuilds/' + item, 'repo': 'https://aur.archlinux.org/' + item + '.git'}] }}"
