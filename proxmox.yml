@@ -2,8 +2,20 @@
   hosts: proxmox
   remote_user: root
   gather_facts: False
+  vars:
+    template: alpine-3.18-default_20230607_amd64.tar.xz
 
   tasks:
+    - name: Download Alpine template
+      community.general.proxmox_template:
+        node: pve
+        api_user: root@pam
+        api_password: "{{api_password}}"
+        api_host: pve
+        storage: local
+        content_type: vztmpl
+        template: "{{template}}"
+
     - name: Create LXC container
       community.general.proxmox:
         vmid: "{{item.id}}"
@@ -13,7 +25,7 @@
         api_host: pve
         password: "{{container_password}}"
         hostname: "{{item.name}}"
-        ostemplate: 'local:vztmpl/alpine-3.18-default_20230607_amd64.tar.xz'
+        ostemplate: 'local:vztmpl/{{template}}'
         netif: '{"net0":"name=eth0,gw=192.168.1.1,ip=192.168.1.{{item.id}}/24,bridge=vmbr0"}'
         disk: "{{item.storage}}"
         mounts: '{"mp0":"/mnt/pve/share,mp=/mnt/share"}'
