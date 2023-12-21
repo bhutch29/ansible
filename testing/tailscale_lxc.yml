@@ -1,0 +1,11 @@
+- name: Setup Tailscale
+  hosts: alpineLxc
+  remote_user: root
+  gather_facts: False
+
+  tasks:
+    - name: Install packages
+      community.general.apk:
+        name: vim,tailscale
+        state: present
+        update_cache: true

@@ -4,9 +4,10 @@
   gather_facts: False
   vars:
     containers:
-      - {name: dockerhost, id: 201, cores: 2, memory: 16000, swap: 1024, storage: 16G}
+      # - {name: dockerhost, id: 201, cores: 2, memory: 16000, swap: 1024, storage: 16G}
       # - {name: media, id: 202, cores: 2, memory: 8192, swap: 1024, storage: 16G}
-      - {name: tailnode, id: 210, cores: 1, memory: 2048, swap: 512, storage: 16G}
+      # - {name: tailnode, id: 210, cores: 1, memory: 2048, swap: 512, storage: 16G}
+      - {name: test, id: 208, cores: 1, memory: 2048, swap: 512, storage: 16G}
 
   tasks:
     # - name: Create ZFS file system, add to PVE
@@ -45,4 +46,25 @@
         api_password: "{{api_password}}"
         api_host: pve
         state: started
+      loop: "{{containers}}"
+
+    - name: Fix resolv.conf
+      changed_when: false
+      ansible.builtin.shell:
+        cmd: echo "echo 'nameserver 8.8.8.8' > /etc/resolv.conf" | pct enter {{item.id}}
+      loop: "{{containers}}"
+
+    - name: Install SSH
+      changed_when: false
+      shell: echo "apk add openssh" | pct enter {{item.id}}
+      loop: "{{containers}}"
+
+    - name: Permit root login
+      changed_when: false
+      shell: echo "grep -qxF 'PermitRootLogin yes' /etc/ssh/sshd_config || echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config" | pct enter {{item.id}}
+      loop: "{{containers}}"
+
+    - name: Enable SSH
+      changed_when: false
+      shell: echo "rc-update add sshd && service sshd start" | pct enter {{item.id}}
       loop: "{{containers}}"
