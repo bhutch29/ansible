@@ -1,4 +1,4 @@
-- name: Setup Tailscale
+- name: Install Tailscale
   hosts: alpineLxc
   remote_user: root
   gather_facts: False
@@ -10,8 +10,8 @@
         state: present
         update_cache: true
 
-    - name: Enable service
-      ansible.builtin.service:
-        name: tailscale
-        state: started
-        enabled: yes
+    # - name: Enable service
+    #   ansible.builtin.service:
+    #     name: tailscale
+    #     state: started
+    #     enabled: yes

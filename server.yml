@@ -1,5 +1,15 @@
-  - name: Proxmox
-    ansible.builtin.import_playbook: proxmox.yml
+- name: Proxmox
+  ansible.builtin.import_playbook: proxmox.yml
 
-  - name: Tailscale
-    ansible.builtin.import_playbook: tailscale_lxc.yml
+- name: Install Tailscale
+  ansible.builtin.import_playbook: tailscale_lxc.yml
+
+    # Fails to install Tailscale, which is fine because we just did
+- name: Setup Tailscale
+  hosts: alpineLxc
+  remote_user: root
+  roles: 
+    - role:  artis3n.tailscale
+      vars:
+        tailscale_service: "tailscale"
+

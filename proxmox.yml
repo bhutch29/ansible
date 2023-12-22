@@ -37,7 +37,6 @@
         unprivileged: yes
         storage: vmstorage
       loop: "{{containers}}"
-        
 
     - name: Start LXC container
       community.general.proxmox:
@@ -90,3 +89,22 @@
         regexp: '^lxc.mount.entry'
         line: 'lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file'
       loop: "{{containers}}"
+      register: permit_tunnel
+      notify: Restart LXC container
+
+  handlers:
+    - name: Restart LXC container
+      community.general.proxmox:
+        vmid: "{{item.item.id}}"
+        node: pve
+        api_user: root@pam
+        api_password: "{{api_password}}"
+        api_host: pve
+        state: restarted
+      notify: Wait for container to wake up
+      loop: "{{permit_tunnel.results}}"
+
+    - name: Wait for container to wake up
+      ansible.builtin.wait_for:
+        timeout: 10
+      delegate_to: localhost
