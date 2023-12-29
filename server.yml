@@ -4,7 +4,7 @@
 - name: Install Tailscale
   ansible.builtin.import_playbook: tailscale_lxc.yml
 
-    # Fails to install Tailscale, which is fine because we just did
+  # Fails to install Tailscale, which is fine because we just did it ourselves
 - name: Setup Tailscale
   hosts: alpineLxc
   remote_user: root
@@ -13,3 +13,5 @@
       vars:
         tailscale_service: "tailscale"
 
+- name: Install Docker
+  ansible.builtin.import_playbook: docker.yml

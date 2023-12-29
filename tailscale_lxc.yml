@@ -9,9 +9,3 @@
         name: tailscale
         state: present
         update_cache: true
-
-    # - name: Enable service
-    #   ansible.builtin.service:
-    #     name: tailscale
-    #     state: started
-    #     enabled: yes
