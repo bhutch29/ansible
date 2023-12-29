@@ -1,0 +1,69 @@
+version: "2"
+services:
+
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    restart: always
+    command: --templates http://templates/templates.json
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${USERDIR}/portainer/data:/data
+    ports:
+      - "9000:9000"
+    environment:
+      - TZ=${TZ}
+
+  monica:
+    container_name: monica
+    image: monicahq/monicahq
+    build: .
+    links:
+      - monica-db
+    ports:
+      - 8011:80
+    volumes:
+      - ${USERDIR}/monica/storage/app/public:/var/www/monica/storage/app/public
+    env_file: ${USERDIR}/monica-db/env
+
+  monica-db:
+    container_name: monica-db
+    image: mysql
+    volumes:
+      - ${USERDIR}/monica-db/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=Brzbat29
+      - MYSQL_PASSWORD=secret
+      - MYSQL_DATABASE=monica
+      - MYSQL_USER=homestead
+
+  jackett:
+    image: "linuxserver/jackett"
+    container_name: "jackett"
+    volumes:
+      - ${USERDIR}/jackett:/config
+      - /mnt/downloads/completed:/downloads
+      - "/etc/localtime:/etc/localtime:ro"
+      - ${USERDIR}/certs:/certs
+    ports:
+      - "8010:9117"
+    restart: always
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+
+  nzbhydra:
+    image: "linuxserver/hydra2"
+    container_name: "nzbhydra"
+    volumes:
+      - ${USERDIR}/nzbhydra:/config
+      - /mnt/downloads:/downloads
+      - ${USERDIR}/certs:/certs
+    ports:
+      - "8005:5076"
+    restart: always
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ} 
