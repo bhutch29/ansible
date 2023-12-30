@@ -6,6 +6,8 @@
     template: alpine-3.18-default_20230607_amd64.tar.xz
 
   tasks:
+    # TODO: setup nfs mountpoints
+
     - name: Download Alpine template
       community.general.proxmox_template:
         node: pve
@@ -28,14 +30,16 @@
         ostemplate: 'local:vztmpl/{{template}}'
         netif: '{"net0":"name=eth0,gw=192.168.1.1,ip=192.168.1.{{item.id}}/24,bridge=vmbr0"}'
         disk: "{{item.storage}}"
-        mounts: '{"mp0":"/mnt/pve/share,mp=/mnt/share"}'
+        mounts: '{"mp0":"/mnt/pve/share,mp=/mnt/share","mp1":"/lxc_storage,mp=/mnt/lxc_storage"}'
         state: present
         cores: "{{item.cores}}"
         memory: "{{item.memory}}"
         swap: "{{item.swap}}"
         onboot: yes
-        unprivileged: yes
+        unprivileged: false
         storage: vmstorage
+        features:
+          - nesting=1
       loop: "{{containers}}"
 
     - name: Start LXC container
@@ -89,7 +93,34 @@
         regexp: '^lxc.mount.entry'
         line: 'lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file'
       loop: "{{containers}}"
-      register: permit_tunnel
+      notify: Restart LXC container
+
+    - name: Changes for privileged containers part 1
+      become: yes
+      lineinfile:
+        path: /etc/pve/lxc/{{item.id}}.conf
+        regexp: '^lxc.apparmor.profile'
+        line: 'lxc.apparmor.profile: unconfined'
+      loop: "{{containers}}"
+      notify: Restart LXC container
+
+    - name: Changes for privileged containers part 2
+      become: yes
+      lineinfile:
+        path: /etc/pve/lxc/{{item.id}}.conf
+        regexp: '^lxc.cgroup.devices.allow'
+        line: 'lxc.cgroup.devices.allow: a'
+      loop: "{{containers}}"
+      notify: Restart LXC container
+
+    - name: Changes for privileged containers part 3
+      become: yes
+      lineinfile:
+        path: /etc/pve/lxc/{{item.id}}.conf
+        regexp: '^lxc.cap.drop'
+        line: 'lxc.cap.drop:'
+      loop: "{{containers}}"
+      register: lxc_conf_update
       notify: Restart LXC container
 
   handlers:
@@ -102,7 +133,7 @@
         api_host: pve
         state: restarted
       notify: Wait for container to wake up
-      loop: "{{permit_tunnel.results}}"
+      loop: "{{lxc_conf_update.results}}"
 
     - name: Wait for container to wake up
       ansible.builtin.wait_for:

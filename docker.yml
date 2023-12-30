@@ -16,20 +16,16 @@
         state: started
         enabled: yes
 
-    # - name: Copy docker-compose templates for each service
-    #   ansible.builtin.template:
-    #     src: files/docker_services/{{ item.project_name }}.yml.j2
-    #     dest: /home/maintenance/docker_services/{{ item.project_name }}/docker-compose.yml
-    #     backup: yes
-    #   loop: "{{ docker_services }}"
-    #
-    # - name: "Update docker service image"
-    #   command:
-    #     chdir: /home/maintenance/docker_services/{{ item.project_name }}
-    #     cmd: docker-compose pull
-    #   loop: "{{ docker_services }}"
-    # - name: "Start docker service"
-    #   command:
-    #     chdir: /home/maintenance/docker_services/{{ item.project_name }}
-    #     cmd: docker-compose up -d
-    #   loop: "{{ docker_services }}"
+    - name: Copy docker-compose file
+      ansible.builtin.copy:
+        src: files/docker-compose.media.yml # TODO: update with name of each server
+        dest: /root/docker-compose.yml
+        backup: yes
+
+    - name: "Docker compose pull"
+      command:
+        cmd: docker-compose pull
+
+    - name: "Docker compose up"
+      command:
+        cmd: docker-compose up -d
