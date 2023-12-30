@@ -58,6 +58,12 @@
         cmd: echo "echo 'nameserver 8.8.8.8' > /etc/resolv.conf" | pct enter {{item.id}}
       loop: "{{containers}}"
 
+    - name: Prevent overwrite of resolv.conf
+      changed_when: false
+      ansible.builtin.shell:
+        cmd: echo "touch /etc/.pve-ignore.resolv.conf" | pct enter {{item.id}}
+      loop: "{{containers}}"
+
     - name: Install SSH
       changed_when: false
       shell: echo "apk add openssh" | pct enter {{item.id}}
