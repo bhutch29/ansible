@@ -6,7 +6,7 @@
     template: alpine-3.18-default_20230607_amd64.tar.xz
 
   tasks:
-    # TODO: setup nfs mountpoints
+    # TODO: setup nfs mountpoints on proxmox machine: /mnt/pve/share
 
     - name: Download Alpine template
       community.general.proxmox_template:

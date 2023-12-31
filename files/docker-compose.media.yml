@@ -1,121 +1,54 @@
 version: "2"
 services:
+  sabnzbd:
+    image: "linuxserver/sabnzbd"
+    container_name: "sabnzbd"
+    volumes:
+      - /mnt/lxc_storage/sabnzbd:/config
+      - /mnt/share/downloads/completed:/downloads
+      - /mnt/share/downloads/incomplete:/incomplete-downloads
+      - /root/certs:/certs
+    ports:
+        - "8002:8080"
+    restart: always
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Etc/PDT
 
-  # qbittorrent:
-  #   image: "linuxserver/qbittorrent"
-  #   container_name: "qbittorrent"
-  #   volumes:
-  #     - ${USERDIR}/qbittorrent:/config
-  #     - /mnt/downloads/qbittorrent/completed:/downloads
-  #     - ${USERDIR}/certs:/certs
-  #   ports:
-  #     - "8001:8001"
-  #     - "6881:6881"
-  #     - "6881:6881/udp"
-  #   restart: always
-  #   environment:
-  #     - PUID=${PUID}
-  #     - PGID=${PGID}
-  #     - TZ=${TZ}
-  #     - UMASK_SET=002
-  #     - WEBUI_PORT=8001
+  radarr:
+    image: "linuxserver/radarr"
+    container_name: "radarr"
+    volumes:
+      - /mnt/lxc_storage/radarr:/config
+      - /mnt/share/downloads/completed:/downloads
+      - /mnt/share/media/movies:/movies
+      - "/etc/localtime:/etc/localtime:ro"
+      - /root/certs:/certs
+    ports:
+      - "7878:7878"
+    restart: always
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Etc/PDT
 
-  # sabnzbd:
-  #   image: "linuxserver/sabnzbd"
-  #   container_name: "sabnzbd"
-  #   volumes:
-  #     - ${USERDIR}/sabnzbd:/config
-  #     - /mnt/downloads/completed:/downloads
-  #     - /mnt/downloads/incomplete:/incomplete-downloads
-  #     - ${USERDIR}/certs:/certs
-  #   ports:
-  #       - "8002:8080"
-  #   restart: always
-  #   environment:
-  #     - PUID=${PUID}
-  #     - PGID=${PGID}
-  #     - TZ=${TZ}
-
-  # radarr:
-  #   image: "linuxserver/radarr"
-  #   container_name: "radarr"
-  #   volumes:
-  #     - ${USERDIR}/radarr:/config
-  #     - /mnt/downloads/completed:/downloads
-  #     - /mnt/media/movies:/movies
-  #     - "/etc/localtime:/etc/localtime:ro"
-  #     - ${USERDIR}/certs:/certs
-  #   ports:
-  #     - "7878:7878"
-  #   restart: always
-  #   environment:
-  #     - PUID=${PUID}
-  #     - PGID=${PGID}
-  #     - TZ=${TZ}
-
-  # sonarr:
-  #   image: "linuxserver/sonarr"
-  #   container_name: "sonarr"
-  #   volumes:
-  #     - ${USERDIR}/sonarr:/config
-  #     - /mnt/downloads/completed:/downloads
-  #     - /mnt/media/tvshows:/tv
-  #     - "/etc/localtime:/etc/localtime:ro"
-  #     - ${USERDIR}/certs:/certs
-  #   ports:
-  #       - "8004:8989"
-  #   restart: always
-  #   environment:
-  #     - PUID=${PUID}
-  #     - PGID=${PGID}
-  #     - TZ=${TZ}
-
-  # plexms:
-  #   container_name: plexms
-  #   restart: always
-  #   image: plexinc/pms-docker
-  #   volumes:
-  #     - ${USERDIR}/plexms:/config
-  #     - /mnt/downloads/plex_tmp:/transcode
-  #     - /mnt/media:/media
-  #     - ${USERDIR}/certs:/certs
-  #   network_mode: host
-  #   environment:
-  #     - TZ=${TZ}
-  #     - HOSTNAME="Docker Plex"
-  #     - PLEX_CLAIM="claim-XrKke5jurEYizZxdhGFa"
-  #     - PLEX_UID=${PUID}
-  #     - PLEX_GID=${PGID}
-  #     - ADVERTISE_IP="http://192.168.1.201:32400/"
-
-  # tautulli:
-  #   container_name: tautulli
-  #   restart: always
-  #   image: linuxserver/tautulli
-  #   volumes:
-  #     - ${USERDIR}/plexpy:/config
-  #     - /var/log/plexpy:/logs:ro
-  #     - ${USERDIR}/certs:/certs
-  #   ports:
-  #     - "8007:8181"
-  #   environment:
-  #     - PUID=${PUID}
-  #     - PGID=${PGID}
-  #     - TZ=${TZ}  
-
-  # ombi:
-  #   container_name: ombi
-  #   restart: always
-  #   image: linuxserver/ombi
-  #   volumes:
-  #     - ${USERDIR}/ombi:/config
-  #     - ${USERDIR}/certs:/certs
-  #   ports:
-  #     - "8008:3579"
-  #   environment:
-  #     - PUID=${PUID}
-  #     - PGID=${PGID}
-  #     - TZ=${TZ}  
+  sonarr:
+    image: "linuxserver/sonarr"
+    container_name: "sonarr"
+    volumes:
+      - /mnt/lxc_storage/sonarr:/config
+      - /mnt/share/downloads/completed:/downloads
+      - /mnt/share/media/tvshows:/tv
+      - "/etc/localtime:/etc/localtime:ro"
+      - /root/certs:/certs
+    ports:
+        - "8004:8989"
+    restart: always
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Etc/PDT
 
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
@@ -136,10 +69,17 @@ services:
       - 1900:1900/udp #optional, service discovery used by DNLA and clients
     restart: always
 
-  # watchtower:
-  #   container_name: watchtower
+  # plexms:
+  #   container_name: plexms
   #   restart: always
-  #   image: v2tec/watchtower
+  #   image: plexinc/pms-docker
   #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #   command: --schedule "0 0 4 * * *" --cleanup
+  #     - /root/plexms:/config
+  #     - /mnt/share/downloads/plex_tmp:/transcode
+  #     - /mnt/share/media:/media
+  #     - /root/certs:/certs
+  #   network_mode: host
+  #   environment:
+  #     - HOSTNAME="Docker Plex"
+  #     - PLEX_CLAIM="claim-XrKke5jurEYizZxdhGFa"
+  #     - ADVERTISE_IP="http://192.168.1.201:32400/"

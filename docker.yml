@@ -1,5 +1,5 @@
 - name: Setup Docker
-  hosts: dockerServers
+  hosts: mediaServer # TODO: split generic docker config
   remote_user: root
   gather_facts: False
 
