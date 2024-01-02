@@ -37,7 +37,7 @@
         swap: "{{item.swap}}"
         onboot: yes
         unprivileged: false
-        storage: vmstorage
+        storage: vmstorage1
         features:
           - nesting=1
       loop: "{{containers}}"
