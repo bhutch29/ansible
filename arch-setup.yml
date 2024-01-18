@@ -13,7 +13,6 @@
       - xorg-server
       - xorg-xinit
       - acpi_call # TODO: for Lenovos
-      - bc
       - mesa
       - ttf-jetbrains-mono
       - zip
@@ -70,7 +69,6 @@
       - python-pip
       - nmap
       - libqalculate
-      - w3m
       - ncdu
       - croc
       - spotifyd
@@ -78,7 +76,6 @@
       - ruby
       - ruby-irb
       - tree
-      - xplr
       - xclip
       - ccache
       - neovim
@@ -92,6 +89,7 @@
       - duf
       - tailscale
       - obsidian
+      - vifm
     aur_packages:
       - nerd-fonts-jetbrains-mono
       - gotop
@@ -101,7 +99,6 @@
       - networkmanager-dmenu-git
       - rofi-dmenu
       - i3lock-color
-      - spotify-tui
 
   tasks:
     - name: Check if AMD or Intel
