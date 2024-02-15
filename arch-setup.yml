@@ -13,7 +13,6 @@
       - xorg-server
       - xorg-xinit
       - acpi_call # TODO: for Lenovos
-      - bc
       - mesa
       - ttf-jetbrains-mono
       - zip
@@ -70,7 +69,6 @@
       - python-pip
       - nmap
       - libqalculate
-      - w3m
       - ncdu
       - croc
       - spotifyd
@@ -78,7 +76,6 @@
       - ruby
       - ruby-irb
       - tree
-      - xplr
       - xclip
       - ccache
       - neovim
@@ -93,6 +90,7 @@
       - tailscale
       - obsidian
       - deno
+      - vifm
     aur_packages:
       - nerd-fonts-jetbrains-mono
       - gotop
@@ -102,7 +100,6 @@
       - networkmanager-dmenu-git
       - rofi-dmenu
       - i3lock-color
-      - spotify-tui
 
   tasks:
     - name: Check if AMD or Intel
@@ -223,7 +220,6 @@
         git_repos:
           - {dest: ~/scripts, repo: git@github.com:bhutch29/scripts.git}
           - {dest: ~/dotfiles, repo: git@github.com:bhutch29/dotfiles.git}
-          - {dest: ~/org, repo: git@github.com:bhutch29/org.git}
           - {dest: ~/obsidian, repo: git@github.com:bhutch29/obsidian.git}
 
             # TODO: replace with yay
