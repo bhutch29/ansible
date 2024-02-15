@@ -92,6 +92,7 @@
       - duf
       - tailscale
       - obsidian
+      - deno
     aur_packages:
       - nerd-fonts-jetbrains-mono
       - gotop
