@@ -1,63 +1,63 @@
 version: "2"
 services:
 
-  home-assistant:
-    container_name: home-assistant
-    restart: always
-    image: homeassistant/home-assistant
-    volumes:
-      - ${USERDIR}/home-assistant:/config
-      - /etc/localtime:/etc/localtime:ro
-      - ${USERDIR}/certs:/certs
-    network_mode: host
-    privileged: true
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-
-  nextcloud:
-    container_name: nextcloud
-    restart: always
-    image: linuxserver/nextcloud
-    volumes:
-      - ${USERDIR}/nextcloud:/config
-      - /mnt/files:/data
-      - ${USERDIR}/certs:/certs
-    links:
-      - nextcloud-db
-    ports:
-      - "443:443"
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-
-  nextcloud-db:
-    container_name: nextcloud-db
-    image: mariadb
-    restart: always
-    volumes:
-      - ${USERDIR}/nextcloud-db:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=Brzbat29
-      - MYSQL_PASSWORD=Brzbat29
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
-
-  organizr:
-    container_name: organizr
-    restart: always
-    image: lsiocommunity/organizr
-    volumes:
-      - ${USERDIR}/organizr:/config
-      - ${USERDIR}/certs:/certs
-    ports:
-      - "8006:80"
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-
+  # home-assistant:
+  #   container_name: home-assistant
+  #   restart: always
+  #   image: homeassistant/home-assistant
+  #   volumes:
+  #     - ${USERDIR}/home-assistant:/config
+  #     - /etc/localtime:/etc/localtime:ro
+  #     - ${USERDIR}/certs:/certs
+  #   network_mode: host
+  #   privileged: true
+  #   environment:
+  #     - PUID=${PUID}
+  #     - PGID=${PGID}
+  #     - TZ=${TZ}
+  #
+  # nextcloud:
+  #   container_name: nextcloud
+  #   restart: always
+  #   image: linuxserver/nextcloud
+  #   volumes:
+  #     - ${USERDIR}/nextcloud:/config
+  #     - /mnt/files:/data
+  #     - ${USERDIR}/certs:/certs
+  #   links:
+  #     - nextcloud-db
+  #   ports:
+  #     - "443:443"
+  #   environment:
+  #     - PUID=${PUID}
+  #     - PGID=${PGID}
+  #
+  # nextcloud-db:
+  #   container_name: nextcloud-db
+  #   image: mariadb
+  #   restart: always
+  #   volumes:
+  #     - ${USERDIR}/nextcloud-db:/var/lib/mysql
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=Brzbat29
+  #     - MYSQL_PASSWORD=Brzbat29
+  #     - MYSQL_DATABASE=nextcloud
+  #     - MYSQL_USER=nextcloud
+  #
+  # organizr:
+  #   container_name: organizr
+  #   restart: always
+  #   image: lsiocommunity/organizr
+  #   volumes:
+  #     - ${USERDIR}/organizr:/config
+  #     - ${USERDIR}/certs:/certs
+  #   ports:
+  #     - "8006:80"
+  #   environment:
+  #     - PUID=${PUID}
+  #     - PGID=${PGID}
+  #     - TZ=${TZ}
+  #
   watchtower:
     container_name: watchtower
     restart: always
@@ -65,5 +65,3 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --schedule "0 0 4 * * *" --cleanup
-
-  

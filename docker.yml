@@ -1,5 +1,5 @@
 - name: Setup Docker
-  hosts: mediaServer # TODO: split generic docker config
+  hosts: dockerServer
   remote_user: root
   gather_facts: False
 
@@ -18,7 +18,7 @@
 
     - name: Copy docker-compose file
       ansible.builtin.copy:
-        src: files/docker-compose.media.yml # TODO: update with name of each server
+        src: files/{{composeFile}}
         dest: /root/docker-compose.yml
         backup: yes
 
