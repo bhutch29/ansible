@@ -3,7 +3,8 @@
   remote_user: root
   gather_facts: False
   vars:
-    template: alpine-3.18-default_20230607_amd64.tar.xz
+    alpineTemplate: alpine-3.18-default_20230607_amd64.tar.xz
+    debianTemplate: debian-12-standard_12.2-1_amd64.tar.zst
 
   tasks:
     # TODO: setup nfs mountpoints on proxmox machine: /mnt/pve/share
@@ -16,7 +17,17 @@
         api_host: pve
         storage: local
         content_type: vztmpl
-        template: "{{template}}"
+        template: "{{alpineTemplate}}"
+
+    - name: Download Debian template
+      community.general.proxmox_template:
+        node: pve
+        api_user: root@pam
+        api_password: "{{api_password}}"
+        api_host: pve
+        storage: local
+        content_type: vztmpl
+        template: "{{debianTemplate}}"
 
     - name: Create LXC container
       community.general.proxmox:
@@ -27,7 +38,7 @@
         api_host: pve
         password: "{{container_password}}"
         hostname: "{{item.name}}"
-        ostemplate: 'local:vztmpl/{{template}}'
+        ostemplate: 'local:vztmpl/{{debianTemplate if item.debian else alpineTemplate}}'
         netif: '{"net0":"name=eth0,gw=192.168.1.1,ip=192.168.1.{{item.id}}/24,bridge=vmbr0"}'
         disk: "{{item.storage}}"
         mounts: '{"mp0":"/mnt/pve/share,mp=/mnt/share","mp1":"/lxc_storage,mp=/mnt/lxc_storage"}'
@@ -39,7 +50,7 @@
         unprivileged: false
         storage: vmstorage1
         features:
-          - nesting=1
+          - "{{'nesting=0' if item.debian else 'nesting=1'}}"
       loop: "{{containers}}"
 
     - name: Start LXC container
@@ -66,6 +77,7 @@
 
     - name: Install SSH
       changed_when: false
+      when: not item.debian
       shell: echo "apk add openssh" | pct enter {{item.id}}
       loop: "{{containers}}"
 
@@ -76,11 +88,13 @@
 
     - name: Enable SSH
       changed_when: false
+      when: not item.debian
       shell: echo "rc-update add sshd && service sshd start" | pct enter {{item.id}}
       loop: "{{containers}}"
 
     - name: Install python
       changed_when: false
+      when: not item.debian
       shell: echo "apk add python3" | pct enter {{item.id}}
       loop: "{{containers}}"
 
@@ -117,6 +131,7 @@
         regexp: '^lxc.cgroup.devices.allow'
         line: 'lxc.cgroup.devices.allow: a'
       loop: "{{containers}}"
+      register: lxc_conf_update
       notify: Restart LXC container
 
     - name: Changes for privileged containers part 3
@@ -126,8 +141,10 @@
         regexp: '^lxc.cap.drop'
         line: 'lxc.cap.drop:'
       loop: "{{containers}}"
-      register: lxc_conf_update
-      notify: Restart LXC container
+      # Unknown bug causes this to always count as changed
+      changed_when: false
+      # register: lxc_conf_update
+      # notify: Restart LXC container
 
   handlers:
     - name: Restart LXC container

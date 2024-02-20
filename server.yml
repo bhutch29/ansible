@@ -4,8 +4,8 @@
 - name: Install Tailscale
   ansible.builtin.import_playbook: tailscale_lxc.yml
 
-  # Fails to install Tailscale, which is fine because we just did it ourselves
-- name: Setup Tailscale
+  # Fails to install Tailscale on Alpine, which is fine because we just did it ourselves
+- name: Setup Tailscale (Alpine)
   hosts: alpineLxc
   remote_user: root
   roles: 
@@ -13,5 +13,15 @@
       vars:
         tailscale_service: "tailscale"
 
+  # TODO: Only split up because setting tailscale_service var in hosts.yml doesn't appear to work for this role
+- name: Setup Tailscale (Debian)
+  hosts: debianLxc
+  remote_user: root
+  roles: 
+    - role:  artis3n.tailscale
+
 - name: Install Docker
   ansible.builtin.import_playbook: docker.yml
+
+- name: Setup Historian
+  ansible.builtin.import_playbook: historian.yml

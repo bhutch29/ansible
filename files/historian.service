@@ -1,0 +1,10 @@
+[Unit]
+Description=Historian Service
+After=network.target
+
+[Service]
+ExecStart=/root/historian
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

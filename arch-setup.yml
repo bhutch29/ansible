@@ -91,6 +91,7 @@
       - obsidian
       - deno
       - vifm
+      - just
     aur_packages:
       - nerd-fonts-jetbrains-mono
       - gotop

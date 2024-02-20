@@ -4,7 +4,7 @@
   gather_facts: False
 
   tasks:
-    - name: Install packages
+    - name: Install packages (Alpine)
       community.general.apk:
         name: tailscale
         state: present

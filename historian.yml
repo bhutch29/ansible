@@ -1,0 +1,22 @@
+- name: Setup Historian
+  hosts: historian
+  remote_user: root
+  gather_facts: False
+
+  tasks:
+    - name: Upload script 
+      ansible.builtin.copy:
+        src: temp/historian # TODO: host this somewhere accessible for Ansible
+        dest: /root/historian
+        mode: a+x
+
+    - name: Install systemd service file
+      ansible.builtin.copy:
+        src: files/historian.service
+        dest: /lib/systemd/system/
+
+    - name: Enable service
+      ansible.builtin.service:
+        name: historian
+        state: restarted
+        enabled: yes
