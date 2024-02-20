@@ -1,7 +1,7 @@
-- name: Proxmox
-  ansible.builtin.import_playbook: proxmox.yml
+# - name: Proxmox
+#   ansible.builtin.import_playbook: proxmox.yml
 
-- name: Install Tailscale
+- name: Install Tailscale (Alpine)
   ansible.builtin.import_playbook: tailscale_lxc.yml
 
   # Fails to install Tailscale on Alpine, which is fine because we just did it ourselves
@@ -20,8 +20,10 @@
   roles: 
     - role:  artis3n.tailscale
 
+  # Must be before Docker playbook
+- name: Setup Historian
+  ansible.builtin.import_playbook: historian.yml
+
 - name: Install Docker
   ansible.builtin.import_playbook: docker.yml
 
-- name: Setup Historian
-  ansible.builtin.import_playbook: historian.yml

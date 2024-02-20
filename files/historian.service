@@ -3,7 +3,7 @@ Description=Historian Service
 After=network.target
 
 [Service]
-ExecStart=/root/historian
+ExecStart=/root/historian.ts
 Restart=always
 
 [Install]

@@ -4,10 +4,26 @@
   gather_facts: False
 
   tasks:
+    - name: Install curl/unzip
+      ansible.builtin.apt:
+        name: curl,unzip
+        state: present
+        update_cache: true
+
+    - name: Install deno
+      ansible.builtin.shell: curl -fsSL https://deno.land/install.sh | sh
+      args:
+        creates: ~/.deno
+
+    - name: Move deno to bin dir
+      ansible.builtin.command: cp /root/.deno/bin/deno /bin
+      args:
+        creates: /bin/deno
+
     - name: Upload script 
       ansible.builtin.copy:
-        src: temp/historian # TODO: host this somewhere accessible for Ansible
-        dest: /root/historian
+        src: temp/historian.ts # TODO: host this somewhere accessible for Ansible
+        dest: /root/historian.ts
         mode: a+x
 
     - name: Install systemd service file
@@ -18,5 +34,5 @@
     - name: Enable service
       ansible.builtin.service:
         name: historian
-        state: restarted
+        state: reloaded
         enabled: yes

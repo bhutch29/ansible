@@ -58,10 +58,20 @@ services:
   #     - PGID=${PGID}
   #     - TZ=${TZ}
   #
-  watchtower:
-    container_name: watchtower
-    restart: always
-    image: v2tec/watchtower
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: --schedule "0 0 4 * * *" --cleanup
+
+  # historian:
+  #   container_name: historian
+  #   restart: always
+  #   image: denoland/deno:debian
+  #   # TODO: ports
+  #   volumes:
+  #     - /root:/app
+  #   command: run --allow-all --unstable-kv --unstable-cron /app/historian.ts
+
+  # watchtower:
+  #   container_name: watchtower
+  #   restart: always
+  #   image: v2tec/watchtower
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   command: --schedule "0 0 4 * * *" --cleanup
