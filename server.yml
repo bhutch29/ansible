@@ -20,6 +20,12 @@
   roles: 
     - role:  artis3n.tailscale
 
+- name: Setup Tailscale (Arch)
+  hosts: archLxc
+  remote_user: root
+  roles: 
+    - role:  artis3n.tailscale
+
   # Must be before Docker playbook
 - name: Setup Historian
   ansible.builtin.import_playbook: historian.yml

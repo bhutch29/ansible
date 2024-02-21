@@ -34,5 +34,5 @@
     - name: Enable service
       ansible.builtin.service:
         name: historian
-        state: reloaded
+        state: restarted
         enabled: yes

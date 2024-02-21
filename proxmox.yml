@@ -5,11 +5,12 @@
   vars:
     alpineTemplate: alpine-3.18-default_20230607_amd64.tar.xz
     debianTemplate: debian-12-standard_12.2-1_amd64.tar.zst
+    archTemplate: archlinux-base_20230608-1_amd64.tar.zst
 
   tasks:
     # TODO: setup nfs mountpoints on proxmox machine: /mnt/pve/share
 
-    - name: Download Alpine template
+    - name: Download Templates
       community.general.proxmox_template:
         node: pve
         api_user: root@pam
@@ -17,18 +18,12 @@
         api_host: pve
         storage: local
         content_type: vztmpl
-        template: "{{alpineTemplate}}"
-
-    - name: Download Debian template
-      community.general.proxmox_template:
-        node: pve
-        api_user: root@pam
-        api_password: "{{api_password}}"
-        api_host: pve
-        storage: local
-        content_type: vztmpl
-        template: "{{debianTemplate}}"
-
+        template: "{{item}}"
+      with_items: 
+        - "{{alpineTemplate}}"
+        - "{{debianTemplate}}"
+        - "{{archTemplate}}"
+        
     - name: Create LXC container
       community.general.proxmox:
         vmid: "{{item.id}}"
@@ -38,7 +33,7 @@
         api_host: pve
         password: "{{container_password}}"
         hostname: "{{item.name}}"
-        ostemplate: 'local:vztmpl/{{debianTemplate if item.debian else alpineTemplate}}'
+        ostemplate: 'local:vztmpl/{{debianTemplate if item.template == "debian" else archTemplate if item.template == "arch" else alpineTemplate}}'
         netif: '{"net0":"name=eth0,gw=192.168.1.1,ip=192.168.1.{{item.id}}/24,bridge=vmbr0"}'
         disk: "{{item.storage}}"
         mounts: '{"mp0":"/mnt/pve/share,mp=/mnt/share","mp1":"/lxc_storage,mp=/mnt/lxc_storage"}'
@@ -50,7 +45,7 @@
         unprivileged: false
         storage: vmstorage1
         features:
-          - "{{'nesting=0' if item.debian else 'nesting=1'}}"
+          - "{{'nesting=0' if item.template == 'debian' else 'nesting=1'}}"
       loop: "{{containers}}"
 
     - name: Start LXC container
@@ -77,7 +72,7 @@
 
     - name: Install SSH
       changed_when: false
-      when: not item.debian
+      when: item.template == "alpine"
       shell: echo "apk add openssh" | pct enter {{item.id}}
       loop: "{{containers}}"
 
@@ -86,16 +81,35 @@
       shell: echo "grep -qxF 'PermitRootLogin yes' /etc/ssh/sshd_config || echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config" | pct enter {{item.id}}
       loop: "{{containers}}"
 
-    - name: Enable SSH
+    - name: Enable SSH (Alpine)
       changed_when: false
-      when: not item.debian
+      when: item.template == "alpine"
       shell: echo "rc-update add sshd && service sshd start" | pct enter {{item.id}}
       loop: "{{containers}}"
 
-    - name: Install python
+    - name: Enable SSH (Arch)
       changed_when: false
-      when: not item.debian
+      when: item.template == "arch"
+      shell: echo "systemctl enable --now sshd" | pct enter {{item.id}}
+      loop: "{{containers}}"
+
+    - name: Install python (Alpine)
+      changed_when: false
+      when: item.template == "alpine"
       shell: echo "apk add python3" | pct enter {{item.id}}
+      loop: "{{containers}}"
+
+    # TODO: arch containers aren't working, can't install or upgrade
+    - name: Pacman Syu
+      changed_when: false
+      when: item.template == "arch"
+      shell: echo "pacman -Syu --noconfirm" | pct enter {{item.id}}
+      loop: "{{containers}}"
+
+    - name: Install python (Arch)
+      changed_when: false
+      when: item.template == "arch"
+      shell: echo "pacman -S python --noconfirm" | pct enter {{item.id}}
       loop: "{{containers}}"
 
     - name: Permit tunnel for tailscale part 1
