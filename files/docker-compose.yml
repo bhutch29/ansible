@@ -24,7 +24,7 @@ services:
     network_mode: service:ts-homeassistant
     image: "ghcr.io/home-assistant/home-assistant:stable"
     volumes:
-      - /root/home-assistant:/config
+      - /mnt/lxc_storage/home-assistant:/config
       - /etc/localtime:/etc/localtime:ro
       - /run/dbus:/run/dbus:ro
     restart: unless-stopped
@@ -83,11 +83,3 @@ services:
   #   volumes:
   #     - /root:/app
   #   command: run --allow-all --unstable-kv --unstable-cron /app/historian.ts
-
-  # watchtower:
-  #   container_name: watchtower
-  #   restart: always
-  #   image: v2tec/watchtower
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #   command: --schedule "0 0 4 * * *" --cleanup

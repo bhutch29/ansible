@@ -27,24 +27,8 @@ homeassistant:
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   time_zone: America/Los_Angeles
 
-# Enables configuration UI
-config:
-
-# Enables support for tracking state changes over time
-history:
-
-# View all events in a logbook
-logbook:
-
-# Track the sun
-sun:
-
-# Weather prediction
-sensor:
-  - platform: yr
-
-ecobee:
-  api_key: 8RfMiUAoqafDxyDqM9oS6MSTbRsRzSyR
+# ecobee:
+#   api_key: 8RfMiUAoqafDxyDqM9oS6MSTbRsRzSyR
 
 # camera:
 #   - platform: uvc
@@ -52,7 +36,6 @@ ecobee:
 #     key: 0q16r2XItVLgApOPef4gyp636BIaIX4O
 #     password: Brzbat29
 
-sensor:
   # - platform: speedtest
   #   monitored_conditions:
   #     - ping
