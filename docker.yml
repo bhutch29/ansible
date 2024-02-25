@@ -21,6 +21,13 @@
         src: files/{{composeFile}}
         dest: /root/docker-compose.yml
 
+    - name: Make sure supporting files dir exists
+      file:
+        path: "{{ item.dest | dirname }}"
+        state: directory
+      when: supportingFiles is defined
+      loop: "{{supportingFiles}}"
+
     - name: Copy supporting files
       ansible.builtin.copy:
         src: files/{{item.src}}

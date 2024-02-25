@@ -24,7 +24,7 @@ services:
     network_mode: service:ts-homeassistant
     image: "ghcr.io/home-assistant/home-assistant:stable"
     volumes:
-      - /mnt/lxc_storage/home-assistant:/config
+      - /mnt/appconfig/home-assistant:/config
       - /etc/localtime:/etc/localtime:ro
       - /run/dbus:/run/dbus:ro
     restart: unless-stopped

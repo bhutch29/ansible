@@ -4,7 +4,7 @@ services:
     image: "linuxserver/sabnzbd"
     container_name: "sabnzbd"
     volumes:
-      - /mnt/lxc_storage/sabnzbd:/config
+      - /mnt/appconfig/sabnzbd:/config
       - /mnt/share/downloads/completed:/downloads
       - /mnt/share/downloads/incomplete:/incomplete-downloads
       - /root/certs:/certs
@@ -20,7 +20,7 @@ services:
     image: "linuxserver/radarr"
     container_name: "radarr"
     volumes:
-      - /mnt/lxc_storage/radarr:/config
+      - /mnt/appconfig/radarr:/config
       - /mnt/share/downloads/completed:/downloads
       - /mnt/share/media/movies:/movies
       - "/etc/localtime:/etc/localtime:ro"
@@ -37,7 +37,7 @@ services:
     image: "linuxserver/sonarr"
     container_name: "sonarr"
     volumes:
-      - /mnt/lxc_storage/sonarr:/config
+      - /mnt/appconfig/sonarr:/config
       - /mnt/share/downloads/completed:/downloads
       - /mnt/share/media/tvshows:/tv
       - "/etc/localtime:/etc/localtime:ro"
@@ -59,7 +59,7 @@ services:
       - TZ=Etc/PDT
       - JELLYFIN_PublishedServerUrl=192.168.1.209
     volumes:
-      - /mnt/lxc_storage/jellyfin_config:/config
+      - /mnt/appconfig/jellyfin_config:/config
       - /mnt/share/media/tvshows:/data/tvshows
       - /mnt/share/media/movies:/data/movies
     ports:
