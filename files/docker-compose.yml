@@ -4,6 +4,8 @@ services:
     image: tailscale/tailscale:latest
     container_name: ts-homeassistant
     hostname: homeassistant
+    ports:
+      - "8123:8123"
     environment:
       - TS_AUTHKEY={{tailscale_authkey_homeassistant}}
       - TS_STATE_DIR=/var/lib/tailscale
