@@ -17,10 +17,16 @@
         enabled: yes
 
     - name: Copy docker-compose file
-      ansible.builtin.copy:
+      ansible.builtin.template:
         src: files/{{composeFile}}
         dest: /root/docker-compose.yml
-        backup: yes
+
+    - name: Copy supporting files
+      ansible.builtin.copy:
+        src: files/{{item.src}}
+        dest: "{{item.dest}}"
+      when: supportingFiles is defined
+      loop: "{{supportingFiles}}"
 
     - name: "Docker compose pull"
       command:

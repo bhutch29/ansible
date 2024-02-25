@@ -136,19 +136,10 @@
         regexp: '^lxc.apparmor.profile'
         line: 'lxc.apparmor.profile: unconfined'
       loop: "{{containers}}"
-      notify: Restart LXC container
-
-    - name: Changes for privileged containers part 2
-      become: yes
-      lineinfile:
-        path: /etc/pve/lxc/{{item.id}}.conf
-        regexp: '^lxc.cgroup.devices.allow'
-        line: 'lxc.cgroup.devices.allow: a'
-      loop: "{{containers}}"
       register: lxc_conf_update
       notify: Restart LXC container
 
-    - name: Changes for privileged containers part 3
+    - name: Changes for privileged containers part 2
       become: yes
       lineinfile:
         path: /etc/pve/lxc/{{item.id}}.conf
