@@ -1,4 +1,5 @@
 version: '3.7'
+
 services:
   ts-homeassistant:
     image: tailscale/tailscale:latest
@@ -31,50 +32,40 @@ services:
     privileged: true
     depends_on:
       - ts-homeassistant
-  
-  # nextcloud:
-  #   container_name: nextcloud
-  #   restart: always
-  #   image: linuxserver/nextcloud
-  #   volumes:
-  #     - ${USERDIR}/nextcloud:/config
-  #     - /mnt/files:/data
-  #     - ${USERDIR}/certs:/certs
-  #   links:
-  #     - nextcloud-db
-  #   ports:
-  #     - "443:443"
-  #   environment:
-  #     - PUID=${PUID}
-  #     - PGID=${PGID}
-  #
-  # nextcloud-db:
-  #   container_name: nextcloud-db
-  #   image: mariadb
-  #   restart: always
-  #   volumes:
-  #     - ${USERDIR}/nextcloud-db:/var/lib/mysql
-  #   environment:
-  #     - MYSQL_ROOT_PASSWORD=Brzbat29
-  #     - MYSQL_PASSWORD=Brzbat29
-  #     - MYSQL_DATABASE=nextcloud
-  #     - MYSQL_USER=nextcloud
-  #
-  # organizr:
-  #   container_name: organizr
-  #   restart: always
-  #   image: lsiocommunity/organizr
-  #   volumes:
-  #     - ${USERDIR}/organizr:/config
-  #     - ${USERDIR}/certs:/certs
-  #   ports:
-  #     - "8006:80"
-  #   environment:
-  #     - PUID=${PUID}
-  #     - PGID=${PGID}
-  #     - TZ=${TZ}
-  #
 
+  ts-gitea:
+    image: tailscale/tailscale:latest
+    container_name: ts-gitea
+    hostname: gitea
+    ports:
+      - "3000:3000"
+    environment:
+      - TS_AUTHKEY={{tailscale_authkey_homeassistant}}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/tailscale-serve-gitea.json
+    volumes:
+      - /root/ts-gitea/state:/var/lib/tailscale
+      - /root/ts-gitea/config:/config
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+      - sys_module
+    restart: unless-stopped
+
+  gitea:
+    image: gitea/gitea:latest-rootless
+    container_name: gitea
+    environment:
+      - USER_UID=0
+      - USER_GID=0
+    restart: always
+    network_mode: service:ts-gitea
+    volumes:
+      - /mnt/appconfig/gitea/data:/var/lib/gitea
+      - /mnt/appconfig/gitea/config:/etc/gitea
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+  
   # historian:
   #   container_name: historian
   #   restart: always
