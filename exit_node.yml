@@ -1,0 +1,10 @@
+- name: Setup Exit Nodes
+  hosts: exitNode
+  remote_user: root
+  gather_facts: False
+
+  tasks:
+    - name: Enable IP Forwarding
+      ansible.builtin.copy:
+        src: files/99-tailscale.conf
+        dest: /etc/sysctl.d/99-tailscale.conf

@@ -26,6 +26,9 @@
   roles: 
     - role:  artis3n.tailscale
 
+- name: Enable IP Forwarding
+  ansible.builtin.import_playbook: exit_node.yml
+
   # Must be before Docker playbook
 - name: Setup Historian
   ansible.builtin.import_playbook: historian.yml
