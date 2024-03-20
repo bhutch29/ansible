@@ -15,6 +15,9 @@
       - acpi_call # TODO: for Lenovos
       - mesa
       - ttf-jetbrains-mono
+      - ttf-jetbrains-mono-nerd
+      - ttf-nerd-fonts-symbols
+      - ttf-nerd-fonts-symbols-mono
       - zip
       - unzip
       - git
@@ -60,7 +63,6 @@
       - tldr
       - trayer
       - earlyoom
-      - ttf-dejavu
       - gnome-keyring
       - screenfetch
       - autorandr
@@ -73,8 +75,8 @@
       - croc
       - spotifyd
       - docker
-      - ruby
-      - ruby-irb
+      # - ruby
+      # - ruby-irb
       - tree
       - xclip
       - ccache
