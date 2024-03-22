@@ -5,14 +5,14 @@
     packages:
       - fwupd
       - udisks2
-      - vim
+      # - vim
       - ansible
       - networkmanager
       - networkmanager-openconnect
       - network-manager-applet
       - xorg-server
       - xorg-xinit
-      - acpi_call # TODO: for Lenovos
+      # - acpi_call # TODO: for Lenovos
       - mesa
       - ttf-jetbrains-mono
       - ttf-jetbrains-mono-nerd
@@ -30,10 +30,10 @@
       - stow
       - flameshot
       - dunst
-      - nnn
+      # - nnn
       - fish
       - ripgrep
-      - rclone
+      # - rclone
       - go
       - go-tools
       - rustup
@@ -41,7 +41,6 @@
       - typescript
       - dotnet-runtime
       - dotnet-sdk
-      - rclone
       - rsync
       - rofi
       - zathura
@@ -57,8 +56,8 @@
       - pulsemixer
       - pulseaudio
       - pulseaudio-alsa
-      - samba
-      - smbclient
+      # - samba
+      # - smbclient
       - sxiv
       - tldr
       - trayer
@@ -70,10 +69,9 @@
       - reflector
       - python-pip
       - nmap
-      - libqalculate
+      # - libqalculate
       - ncdu
-      - croc
-      - spotifyd
+      # - croc
       - docker
       # - ruby
       # - ruby-irb
@@ -95,14 +93,12 @@
       - vifm
       - just
     aur_packages:
-      - nerd-fonts-jetbrains-mono
       - gotop
       - slack-desktop
-      - jetbrains-toolbox
+      # - jetbrains-toolbox
       - yay
       - networkmanager-dmenu-git
       - rofi-dmenu
-      - i3lock-color
 
   tasks:
     - name: Check if AMD or Intel
@@ -124,29 +120,29 @@
         state: present
         name: "{{ packages }}"
             
-    - name: Laptop-specific tasks
-      tags: ['always', 'laptop']
-      become: yes
-      block:
-        - name: install laptop-specific packages
-          community.general.pacman:
-            state: present
-            name:
-              - tlp
-              - acpilight
-
-        - name: Enable laptop-specific systemd units
-          systemd:
-            enabled: yes
-            state: started
-            name: "{{ item }}"
-          loop:
-            - tlp
-
-        - name: Copy touchpad X11 conf file
-          copy:
-            src: "{{ playbook_dir }}/files/30-touchpad.conf"
-            dest: /etc/X11/xorg.conf.d/30-touchpad.conf
+    # - name: Laptop-specific tasks
+    #   tags: ['always', 'laptop']
+    #   become: yes
+    #   block:
+    #     - name: install laptop-specific packages
+    #       community.general.pacman:
+    #         state: present
+    #         name:
+    #           - tlp
+    #           - acpilight
+    #
+    #     - name: Enable laptop-specific systemd units
+    #       systemd:
+    #         enabled: yes
+    #         state: started
+    #         name: "{{ item }}"
+    #       loop:
+    #         - tlp
+    #
+    #     - name: Copy touchpad X11 conf file
+    #       copy:
+    #         src: "{{ playbook_dir }}/files/30-touchpad.conf"
+    #         dest: /etc/X11/xorg.conf.d/30-touchpad.conf
 
     - name: Copy amdgpu X11 conf file
       become: yes
@@ -168,7 +164,6 @@
         - earlyoom
         - sshd
         - reflector.timer
-        - spotifyd
         - docker
         - fstrim
         - tailscaled
@@ -225,11 +220,11 @@
           - {dest: ~/dotfiles, repo: git@github.com:bhutch29/dotfiles.git}
           - {dest: ~/obsidian, repo: git@github.com:bhutch29/obsidian.git}
 
-            # TODO: replace with yay
-    - name: Gather AUR Repos
-      set_fact:
-        git_repos: "{{ git_repos + [{'dest': '~/pkgbuilds/' + item, 'repo': 'https://aur.archlinux.org/' + item + '.git'}] }}"
-      loop: "{{ aur_packages }}"
+    # TODO: replace with yay
+    # - name: Gather AUR Repos
+    #   set_fact:
+    #     git_repos: "{{ git_repos + [{'dest': '~/pkgbuilds/' + item, 'repo': 'https://aur.archlinux.org/' + item + '.git'}] }}"
+    #   loop: "{{ aur_packages }}"
 
     - name: Clone git repositories
       include_tasks: git_clone_idempotent.yml
