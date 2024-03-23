@@ -101,18 +101,18 @@
       - rofi-dmenu
 
   tasks:
-    - name: Check if AMD or Intel
-      command: grep -q AMD /proc/cpuinfo
-      ignore_errors: true
-      changed_when: false
-      register: is_amd
-
-    - name: install AMD-specific packages
-      when: is_amd
-      community.general.pacman:
-        state: present
-        name:
-          - xf86-video-amdgpu
+    # - name: Check if AMD or Intel
+    #   command: grep -q AMD /proc/cpuinfo
+    #   ignore_errors: true
+    #   changed_when: false
+    #   register: is_amd
+    #
+    # - name: install AMD-specific packages
+    #   when: is_amd
+    #   community.general.pacman:
+    #     state: present
+    #     name:
+    #       - xf86-video-amdgpu
 
     - name: Install general packages
       become: yes
@@ -144,12 +144,12 @@
     #         src: "{{ playbook_dir }}/files/30-touchpad.conf"
     #         dest: /etc/X11/xorg.conf.d/30-touchpad.conf
 
-    - name: Copy amdgpu X11 conf file
-      become: yes
-      when: is_amd
-      copy:
-        src: "{{ playbook_dir }}/files/20-amdgpu.conf"
-        dest: /etc/X11/xorg.conf.d/20-amdgpu.conf
+    # - name: Copy amdgpu X11 conf file
+    #   become: yes
+    #   when: is_amd
+    #   copy:
+    #     src: "{{ playbook_dir }}/files/20-amdgpu.conf"
+    #     dest: /etc/X11/xorg.conf.d/20-amdgpu.conf
 
     - name: Enable systemd units
       become: yes
