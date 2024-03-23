@@ -53,9 +53,9 @@
       - fzf
       - nodejs
       - openconnect
-      - pulsemixer
-      - pulseaudio
-      - pulseaudio-alsa
+      # - pulsemixer
+      # - pulseaudio
+      # - pulseaudio-alsa
       # - samba
       # - smbclient
       - sxiv
