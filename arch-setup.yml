@@ -92,6 +92,7 @@
       - deno
       - vifm
       - just
+      - wezterm
     aur_packages:
       - gotop
       - slack-desktop
