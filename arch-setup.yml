@@ -63,7 +63,6 @@
       - trayer
       - earlyoom
       - gnome-keyring
-      - screenfetch
       - autorandr
       - pandoc
       - reflector
