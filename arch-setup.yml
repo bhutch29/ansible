@@ -93,6 +93,7 @@
       - vifm
       - just
       - xorg-xsetroot
+      - wezterm
     aur_packages:
       - gotop
       - slack-desktop
