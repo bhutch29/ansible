@@ -94,8 +94,8 @@
       - just
       - xorg-xsetroot
       - wezterm
+      - bottom
     aur_packages:
-      - gotop
       - slack-desktop
       # - jetbrains-toolbox
       - yay
