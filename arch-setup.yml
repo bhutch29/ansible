@@ -94,6 +94,7 @@
       - xorg-xsetroot
       - wezterm
       - bottom
+      - dmenu
     aur_packages:
       - slack-desktop
       # - jetbrains-toolbox
