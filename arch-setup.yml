@@ -92,6 +92,7 @@
       - deno
       - vifm
       - just
+      - xorg-xsetroot
     aur_packages:
       - gotop
       - slack-desktop
