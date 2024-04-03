@@ -94,6 +94,8 @@
       - wezterm
       - bottom
       - dmenu
+      - dnsutils
+      - jless
     aur_packages:
       - slack-desktop
       # - jetbrains-toolbox
