@@ -1,4 +1,3 @@
-- name: Setup arch-based workstation
   hosts: localhost
   connection: local
   vars:
@@ -96,6 +95,8 @@
       - dmenu
       - dnsutils
       - jless
+      - acpilight
+      - libnotify
     aur_packages:
       - slack-desktop
       # - jetbrains-toolbox
