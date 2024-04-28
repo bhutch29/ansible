@@ -95,7 +95,6 @@
       - dmenu
       - dnsutils
       - jless
-      - acpilight
       - libnotify
     aur_packages:
       - slack-desktop
