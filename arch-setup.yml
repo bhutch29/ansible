@@ -177,15 +177,16 @@
         regexp: '^# --country'
         line: --country US
 
-    # - name: Create user
-    #   become: yes
-    #   user:
-    #     name: bhutch
-    #     state: present
-    #     generate_ssh_key: yes
-    #     ssh_key_bits: 2048
-    #     ssh_key_file: .ssh/id_rsa
-    #     shell: /usr/bin/fish
+    - name: Create user
+      become: yes
+      user:
+        name: bhutch
+        state: present
+        shell: /usr/bin/fish
+        append: true # Append groups instead of replacing
+        groups: 
+          - docker
+          - wheel
 
     - name: Configure makepkg processor count
       become: yes
