@@ -83,7 +83,6 @@
       - fd
       - eza
       - git-delta
-      - broot
       - tailscale
       - obsidian
       - deno
