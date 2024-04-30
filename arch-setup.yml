@@ -4,14 +4,12 @@
     packages:
       - fwupd
       - udisks2
-      # - vim
       - ansible
       - networkmanager
       - networkmanager-openconnect
       - network-manager-applet
       - xorg-server
       - xorg-xinit
-      # - acpi_call # TODO: for Lenovos
       - mesa
       - ttf-jetbrains-mono
       - ttf-jetbrains-mono-nerd
@@ -29,10 +27,8 @@
       - stow
       - flameshot
       - dunst
-      # - nnn
       - fish
       - ripgrep
-      # - rclone
       - go
       - go-tools
       - rustup
@@ -52,11 +48,7 @@
       - fzf
       - nodejs
       - openconnect
-      # - pulsemixer
-      # - pulseaudio
-      # - pulseaudio-alsa
-      # - samba
-      # - smbclient
+      - pulsemixer
       - sxiv
       - tldr
       - trayer
@@ -67,12 +59,8 @@
       - reflector
       - python-pip
       - nmap
-      # - libqalculate
       - ncdu
-      # - croc
       - docker
-      # - ruby
-      # - ruby-irb
       - tree
       - xclip
       - ccache
@@ -95,9 +83,10 @@
       - dnsutils
       - jless
       - libnotify
+      - websocat
+      - netcat
     aur_packages:
       - slack-desktop
-      # - jetbrains-toolbox
       - yay
       - networkmanager-dmenu-git
       - rofi-dmenu
@@ -215,12 +204,6 @@
           - {dest: ~/scripts, repo: git@github.com:bhutch29/scripts.git}
           - {dest: ~/dotfiles, repo: git@github.com:bhutch29/dotfiles.git}
           - {dest: ~/obsidian, repo: git@github.com:bhutch29/obsidian.git}
-
-    # TODO: replace with yay
-    # - name: Gather AUR Repos
-    #   set_fact:
-    #     git_repos: "{{ git_repos + [{'dest': '~/pkgbuilds/' + item, 'repo': 'https://aur.archlinux.org/' + item + '.git'}] }}"
-    #   loop: "{{ aur_packages }}"
 
     - name: Clone git repositories
       include_tasks: git_clone_idempotent.yml
