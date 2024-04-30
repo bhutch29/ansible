@@ -87,7 +87,6 @@
       - netcat
     aur_packages:
       - slack-desktop
-      - yay
       - networkmanager-dmenu-git
       - rofi-dmenu
 
@@ -198,16 +197,43 @@
         regexp: '^#ParallelDownloads'
         line: ParallelDownloads = 5
 
+    - name: Create projects directory
+      file:
+        path: ~/projects
+        state: directory
+
     - name: Gather Git Repos
       set_fact:
         git_repos:
           - {dest: ~/scripts, repo: git@github.com:bhutch29/scripts.git}
           - {dest: ~/dotfiles, repo: git@github.com:bhutch29/dotfiles.git}
           - {dest: ~/obsidian, repo: git@github.com:bhutch29/obsidian.git}
+          - {dest: ~/projects/dwm, repo: git@github.com:bhutch29/dwm.git}
+          - {dest: ~/projects/yay, repo: https://aur.archlinux.org/yay-bin.git}
 
     - name: Clone git repositories
       include_tasks: git_clone_idempotent.yml
       loop: "{{ git_repos }}"
+
+    - name: Install yay
+      command:
+        chdir: ~/projects/yay
+        cmd: makepkg -si
+        creates: /usr/bin/yay
+
+    - name: Install AUR packages
+      command:
+        cmd: yay -Qk {{ item }} || yay --noconfirm -S {{ item }}
+      register: yay
+      changed_when: "'error: package' in yay.stderr"
+      loop: "{{ aur_packages }}"
+
+    - name: Install dwm
+      become: yes
+      command:
+        chdir: ~/projects/dwm
+        cmd: make install
+        creates: /usr/local/bin/dwm
 
     - name: Run Gnu Stow
       command:
