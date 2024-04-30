@@ -20,7 +20,6 @@
       - git
       - openssh
       - nfs-utils
-      - nftables
       - firefox
       - unclutter
       - man-db
@@ -150,7 +149,6 @@
       loop:
         - NetworkManager
         - systemd-timesyncd
-        - nftables
         - earlyoom
         - sshd
         - reflector.timer
