@@ -119,6 +119,7 @@
     #         name:
     #           - tlp
     #           - acpilight
+    #           - ufw
     #
     #     - name: Enable laptop-specific systemd units
     #       systemd:
@@ -127,6 +128,9 @@
     #         name: "{{ item }}"
     #       loop:
     #         - tlp
+    #         - ufw
+    #
+    # TODO: setup ufw basics: allow SSH/Mosh/4200/4201
     #
     #     - name: Copy touchpad X11 conf file
     #       copy:
