@@ -84,6 +84,7 @@
       - libnotify
       - websocat
       - netcat
+      - i3lock
     aur_packages:
       - slack-desktop
       - networkmanager-dmenu-git
