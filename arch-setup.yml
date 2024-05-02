@@ -20,7 +20,6 @@
       - git
       - openssh
       - nfs-utils
-      - nftables
       - firefox
       - unclutter
       - man-db
@@ -85,6 +84,7 @@
       - libnotify
       - websocat
       - netcat
+      - i3lock
     aur_packages:
       - slack-desktop
       - networkmanager-dmenu-git
@@ -131,6 +131,7 @@
     #         name:
     #           - tlp
     #           - acpilight
+    #           - ufw
     #
     #     - name: Enable laptop-specific systemd units
     #       systemd:
@@ -139,6 +140,9 @@
     #         name: "{{ item }}"
     #       loop:
     #         - tlp
+    #         - ufw
+    #
+    # TODO: setup ufw basics: allow SSH/Mosh/4200/4201
     #
     #     - name: Copy touchpad X11 conf file
     #       copy:
@@ -161,7 +165,6 @@
       loop:
         - NetworkManager
         - systemd-timesyncd
-        - nftables
         - earlyoom
         - sshd
         - reflector.timer
