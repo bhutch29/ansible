@@ -109,6 +109,17 @@
       community.general.pacman:
         state: present
         name: "{{ packages }}"
+
+    # - name: Wake on LAN tasks
+    #   tags: ['always', 'wol']
+    #   become: yes
+    #   block:
+    #     - name: install wol-specific packages
+    #       community.general.pacman:
+    #         state: present
+    #         name:
+    #           - wol-systemd
+    #           // TODO: enable wol@<eth interface>.service
             
     # - name: Laptop-specific tasks
     #   tags: ['always', 'laptop']
